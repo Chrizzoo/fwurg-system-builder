@@ -15,7 +15,7 @@ Feature._list = {};
 /**
  * Retrieves a single feature by ID.
  */
-Feature.get(id) {
+Feature.get = function (id) {
 	return Feature._list[id];
 }
 
@@ -52,12 +52,12 @@ var Orbital = function(orbit) {
 
 Orbital.prototype.name = function(v){if(typeof v=='undefined')return this._name; this._name=v; return this;}
 Orbital.prototype.image = function(v){if(typeof v=='undefined')return this._image; this._image=v; return this;}
-Orbital.prototype.description = function(v){f(typeof v=='undefined')return this._description; this._description=v; return this;}
+Orbital.prototype.description = function(v){if(typeof v=='undefined')return this._description; this._description=v; return this;}
 Orbital.prototype.orbit = function(){return this._orbit;};
 
 Orbital.prototype.hasFeature = function(f){return f in this._features;}
 Orbital.prototype.addFeature = function(f){this._features[f] = true; return this;}
-Obrital.prototype.removeFeature = function(f){delete this._features[f]; return this;}
+Orbital.prototype.removeFeature = function(f){delete this._features[f]; return this;}
 
 /**
  * Returns a list of features, or sets the list of features.
