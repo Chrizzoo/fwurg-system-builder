@@ -19,6 +19,10 @@ Feature.get = function (id) {
 	return Feature._list[id];
 }
 
+Feature.exists= function (id) {
+	return typeof(Feature._list[id]) != 'undefined';
+}
+
 //generic getters/setters
 Feature.prototype.id = function(){return this._id;};
 Feature.prototype.toString = Feature.prototype.id;
