@@ -34,7 +34,7 @@ Feature.prototype.data = function(d,v) {if(typeof v=='undefined')return this._da
  */
 Feature.prototype.resources = function(system, orbit, orbital) {
 	if(typeof this.data('__resources') == 'function') {
-		return this.data('__resources')(system, orbit, orbital);
+		return this.data('__resources').apply(this,[system, orbit, orbital]);
 	} else if(typeof this.data('__resources') == 'object') {
 		return this.data('__resources');
 	} else {

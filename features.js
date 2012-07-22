@@ -29,7 +29,10 @@
 			f.data('classes',cs);
 			// assigning resources function
 			f.data('__resources', resources);
-		} catch(e) {console.log('Failed for ',k); }
+            return f;
+		} catch(e) {
+            console.log('Failed for ',k); 
+        }
 	}
 	
 	// query the stars
@@ -38,24 +41,35 @@
 		qb.where('?s is a: star_class')
 	)).then(function(data) {
 		if (data.status == 'ok') {
+            // declare resource method
+            var starResources = function() {
+                var result = {};
+                // construct correct resources dictionary
+                for(var x in this.data('orbits')) result[x] =  this.data('orbits')[x];
+                for(var x in this.data('cost')) result[x]   = -this.data('cost')[x];
+                return result;
+            }
+
 			// run over features
-			for(var k in data.body) { 
-				// function to make sure that the k value is used in a new scope.
-				(function() {
-					var map = data.body[k];
-					// create the feature with the custom resources function
-					createFeature(map, k,  function() {
-						return {
-							'gas mass': -parseInt(map['Gas Cost'][0]),
-							'hot orbits': parseInt(map['Hot Orbits'][0]),
-							'goldilocks orbits': parseInt(map['Goldilocks Orbits'][0]),
-							'cold orbits': parseInt(map['Cold Orbits'][0])
-						};
-					});
-				})();
+			for(var k in data.body) {
+                var properties = data.body[k];
+
+                // create feature.
+                var feature = createFeature(properties, k, starResources);
+
+                // set relevant data
+                feature.data('orbits', {
+	    			'hot orbits': parseInt(properties['Hot Orbits'][0]),
+    				'goldilocks orbits': parseInt(properties['Goldilocks Orbits'][0]),
+				    'cold orbits': parseInt(properties['Cold Orbits'][0])
+                });
+
+                // some more data
+                feature.data('cost', {
+				    'gas mass': parseInt(properties['Gas Cost'][0])
+                });
 			}
-		}
-		else {
+		} else {
 			console.log(data);
 		}
 	});
