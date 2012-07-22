@@ -3,9 +3,11 @@
 /**
  * A feature.
  */
-var Feature = function(id) {
+var Feature = function(id, classes) {
 	this._id = id;
 	this._data = {};
+    this._classes = {};
+    for(var x in classes) this._classes[classes[x]] = true;
 	Feature._list[id] = this;
 }
 
@@ -26,6 +28,8 @@ Feature.exists= function (id) {
 //generic getters/setters
 Feature.prototype.id = function(){return this._id;};
 Feature.prototype.toString = Feature.prototype.id;
+Feature.prototype.isA = function(f){return f in this._classes;};
+Feature.prototype.classes = function(){var r=[];for(var f in this._classes) r.push(f);return r;}
 Feature.prototype.data = function(d,v) {if(typeof v=='undefined')return this._data[d];this._data[d]=v;return this;}
 
 /**

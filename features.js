@@ -10,28 +10,24 @@
 	
 	/**
 	  * Function that creates a feature.
+	  * creating feature with key id.
 	  * getting data from the map.
-	  * creating feature with key k.
-	  * using the custom resources function.
 	 */
-	var createFeature = function(map, k,  resources) {
+	var createFeature = function(id, map) {
 		try {
-			var f = null;	
-			// if the Feature alrady exists use it.
-			if (F.exists(k)) {
-				f = F.get(k);
+			var f = null;
+
+			// if the Feature already exists use it
+			if (F.exists(id)) {
+				f = F.get(id);
+			} else {
+				f = new F(id, map['is a']);
 			}
-			else {
-				f = new F(k);
-			}
-			// assigning the classes.
-			var cs = {}; for(var x in map['is a']) cs[map['is a'][x]] = true;
-			f.data('classes',cs);
-			// assigning resources function
-			f.data('__resources', resources);
+
+            // return created/fetched feature
             return f;
 		} catch(e) {
-            console.log('Failed for ',k); 
+            console.log('Failed for ',id); 
         }
 	}
 	
@@ -55,7 +51,7 @@
                 var properties = data.body[k];
 
                 // create feature.
-                var feature = createFeature(properties, k, starResources);
+                var feature = createFeature(k, properties);
 
                 // set relevant data
                 feature.data('orbits', {
@@ -68,6 +64,9 @@
                 feature.data('cost', {
 				    'gas mass': parseInt(properties['Gas Cost'][0])
                 });
+
+                // set resources method
+                feature.data('__resources', starResources);
 			}
 		} else {
 			console.log(data);
