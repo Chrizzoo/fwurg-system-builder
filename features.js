@@ -9,8 +9,12 @@
 	var qb = wiki.qb();
 	
 	// initialize the features with hardcoded data.
-	
-	// debug -> fwurg.system.Feature._list["rules:brown_dwarf"].resources("test", new fwurg.system.Orbit("1", "goldilocks"));
+
+    // -- Orbit types
+
+    var hot_orbit = new F("rules:hot_orbit", ["orbit_type"]);
+    var goldilocks_orbit = new F("rules:goldilocks_orbit", ["orbit_type"]);
+    var cold_orbit = new F("rules:cold_orbit", ["orbit_type"]);
 	
 	// -- Gas Giants 
 
@@ -20,7 +24,7 @@
 			var result = {};
 
 			// custom cost
-			if (orbit.getType() == 'goldilocks') {
+			if (orbit.hasFeature(goldilocks_orbit)) {
 				result['gass mass'] = gold;
 			} else {
 				result['gass mass'] = normal;

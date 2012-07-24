@@ -125,12 +125,10 @@ var orbitalId = function() {
 
 /* 
  * @param system, the system that this orbit is part of.
- * @param type, the type of orbit (hot, goldilocks, cold)
  */
-var Orbit = function(system, type) {
+var Orbit = function(system) {
 	this._system = system;
 	this._orbitals = {};
-	this._type = type;
 	this.init();
 }
 Orbit.prototype.init = function(){}
@@ -141,7 +139,6 @@ Orbit.prototype.system = function(){return this._system;};
 Orbit.prototype.addOrbital = function(orb){this._orbitals[orbitalId()] = orb; return this;};
 Orbit.prototype.removeOrbital = function(orb){for(var i in this._orbitals) if(orb == this._orbitals[i]) delete this._orbitals[i]; return this;}
 Orbit.prototype.orbitals = function(){var r = [];for(var k in this._orbitals) r.push(this._orbitals[k]); return r;};
-Orbit.prototype.getType = function() { return this._type; };
 
 /**
  * Determines the resources of this orbit.
