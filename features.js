@@ -55,7 +55,7 @@
 		return function(system, orbit, orbital) {
 			var result = {};
 			result['bio mass'] = 0;
-			var res = orbital.resources(); // FIXME: endless loop! (Correct fix: split cost and benefit functionality)
+			var res = orbital.resources(); // FIXME: endless loop! (Possible fix: split cost and benefit functionality)
 			if(typeof res['zones'] != 'undefined') result['bio mass'] = -res['zones']*factor;
 			return result;
 		};
@@ -75,6 +75,16 @@
 	oceans.data('__resources', biosphereCost(1));
 
 	// automatically create the rest of the features with wiki data.
+	/**
+	 *  Basic resource method that returns benefits as positive integers and costs as negative integers.
+	*/
+	var defaultResources = function() {
+		var result = {};
+		// construct correct resources dictionary
+		for(var x in this.data('benefit')) result[x] =  this.data('benefit')[x];
+		for(var x in this.data('cost')) result[x]   = -this.data('cost')[x];
+		return result;
+	}
 	
 	/**
 	  * Function that creates a feature.
@@ -91,7 +101,7 @@
 			} else {
 				f = new F(id, map['is a']);
 				// set default resources method
-				f.data('__resources', featureResources);
+				f.data('__resources', defaultResources);
 			}
 		// return created/fetched feature
 		return f;
@@ -100,17 +110,7 @@
 		}
 	}
 	
-	/**
-	 *  Basic resource method that returns benefits as positive integers and costs as negative integers.
-	*/
-	var featureResources = function() {
-		var result = {};
-		// construct correct resources dictionary
-		for(var x in this.data('benefit')) result[x] =  this.data('benefit')[x];
-		for(var x in this.data('cost')) result[x]   = -this.data('cost')[x];
-		return result;
-	}
-	
+
 	// query the stars
 	wiki.queryResources(qb.query(
 		qb.fields('?s'),
@@ -126,14 +126,14 @@
 
 			// set relevant data
 			feature.data('benefit', {
-					'hot orbits': parseInt(properties['Hot Orbits'][0]),
-					'goldilocks orbits': parseInt(properties['Goldilocks Orbits'][0]),
-						'cold orbits': parseInt(properties['Cold Orbits'][0])
+				'hot orbits': parseInt(properties['Hot Orbits'][0]),
+				'goldilocks orbits': parseInt(properties['Goldilocks Orbits'][0]),
+				'cold orbits': parseInt(properties['Cold Orbits'][0])
 			});
 
 			// some more data
 			feature.data('cost', {
-						'gas mass': parseInt(properties['Gas Cost'][0])
+				'gas mass': parseInt(properties['Gas Cost'][0])
 			});
 			}
 		} else {
