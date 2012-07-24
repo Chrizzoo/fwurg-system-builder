@@ -10,105 +10,66 @@
 	
 	// initialize the features with hardcoded data.
 	
-		// debug -> fwurg.system.Feature._list["rules:brown_dwarf"].resources("test", new fwurg.system.Orbit("1", "goldilocks"));
+	// debug -> fwurg.system.Feature._list["rules:brown_dwarf"].resources("test", new fwurg.system.Orbit("1", "goldilocks"));
 	
-	// -- Gass Giants 
+	// -- Gas Giants 
+
+	// declare cost function generator
+	var gasGiantCost = function(normal, gold) {
+		return function(system, orbit, orbital) {
+			var result = {};
+
+			// custom cost
+			if (orbit.getType() == 'goldilocks') {
+				result['gass mass'] = gold;
+			} else {
+				result['gass mass'] = normal;
+			}
+
+			// usual benefit
+			for(var x in this.data('benefit')) result[x] =  this.data('benefit')[x];
+			return result;
+		};
+	}
 	
 	// brown dwarf
-	var brown_dwarf = new F("rules:brown_dwarf", ["gass_giant_type"]);
-	var BrownDwarfResources = function(system, orbit, orbital) {
-		var result = {};
-		// custom cost
-		if (orbit.getType() == 'goldilocks') {
-			result['gass mass'] = -9;
-		} else {
-			result['gass mass'] = -5;
-		}
-		// usual benefit
-		for(var x in this.data('benefit')) result[x] =  this.data('benefit')[x];
-		return result;
-	}
-	brown_dwarf.data('__resources', BrownDwarfResources);
+	var brown_dwarf = new F("rules:brown_dwarf", ["gas_giant_type", "planet_type"]);
+	brown_dwarf.data('__resources', gasGiantCost(-5, -9));
 
-	// jovian giant
-	var jovian_giant = new F("rules:jovian_giant", ["gass_giant_type"]);
-	var JovianGiantResources = function(system, orbit, orbital) {
-		var result = {};
-		// custom cost
-		if (orbit.getType() == 'goldilocks') {
-			result['gass mass'] = -5;
-		} else {
-			result['gass mass'] = -4;
-		}
-		// usual benefit
-		for(var x in this.data('benefit')) result[x] =  this.data('benefit')[x];
-		return result;
-	}
-	jovian_giant.data('__resources', JovianGiantResources);
-	
-	
-	var ice_giant = new F("rules:ice_giant", ["gass_giant_type"]);
-	var IceGiantResources = function(system, orbit, orbital) {
-		var result = {};
-		// custom cost
-		if (orbit.getType() == 'goldilocks') {
-			result['gass mass'] = -1;
-		} else {
-			result['gass mass'] = -3;
-		}
-		// usual benefit
-		for(var x in this.data('benefit')) result[x] =  this.data('benefit')[x];
-		return result;
-	}
-	ice_giant.data('__resources', IceGiantResources);
+	var jovian_giant = new F("rules:jovian_giant", ["gas_giant_type", "planet_type"]);
+	jovian_giant.data('__resources', gasGiantCost(-4, -5));
+
+	var ice_giant = new F("rules:ice_giant", ["gas_giant_type", "planet_type"]);
+	ice_giant.data('__resources', gasGiantCost(-1, -3));
 	
 	// -- Atmospheres
 	
-		// debug ->var orbit = new fwurg.system.Orbit("test"); fwurg.system.Feature._list["rules:type_iii_atmosphere"].resources("test", orbit, new fwurg.system.Orbital(orbit).addFeature("rules:large_planet"));
+	// debug ->var orbit = new fwurg.system.Orbit("test"); fwurg.system.Feature._list["rules:type_iii_atmosphere"].resources("test", orbit, new fwurg.system.Orbital(orbit).addFeature("rules:large_planet"));
 
-	var atmos4 = new F("rules:type_iv_atmosphere", ["atmosphere"]);
-	var atmos3 = new F("rules:type_iii_atmosphere", ["atmosphere"]);
-	var atmos2 = new F("rules:type_ii_atmosphere", ["atmosphere"]);
-	var atmos1 = new F("rules:type_i_atmosphere", ["atmosphere"]);
-	var natural_life = new F("rules:natural_life", ["atmosphere"]);
-	var oceans = new F("rules:oceans", ["atmosphere"]);
-	
-	var atmos4Resources = function(system, orbit, orbital) {
-		var result = {};
-		result['bio mass'] = 0;
-		var res = orbital.resources();
-		if(typeof res['zones'] != 'undefined') result['bio mass'] = -res['zones'];
-		return result;
+    // declare biosphere cost generator
+	var biosphereCost = function(factor) {
+		return function(system, orbit, orbital) {
+			var result = {};
+			result['bio mass'] = 0;
+			var res = orbital.resources(); // FIXME: endless loop! (Correct fix: split cost and benefit functionality)
+			if(typeof res['zones'] != 'undefined') result['bio mass'] = -res['zones']*factor;
+			return result;
+		};
 	}
-	var atmos3Resources = function(system, orbit, orbital) {
-		var result = {};
-		result['bio mass'] = 0;
-		var res = orbital.resources();
-		if(typeof res['zones'] != 'undefined') result['bio mass'] = -res['zones']*2;
-		return result;
-	}
-	var atmos2Resources = function(system, orbit, orbital) {
-		var result = {};
-		result['bio mass'] = 0;
-		var res = orbital.resources();
-		if(typeof res['zones'] != 'undefined') result['bio mass'] = -res['zones']*3;
-		return result;
-	}
-	var atmos1Resources = function(system, orbit, orbital) {
-		var result = {};
-		result['bio mass'] = 0;
-		var res = orbital.resources();
-		if(typeof res['zones'] != 'undefined') result['bio mass'] = -res['zones']*4;
-		return result;
-	}
-	
-	atmos4.data('__resources', atmos4Resources);
-	atmos3.data('__resources', atmos3Resources);
-	atmos2.data('__resources', atmos2Resources);
-	atmos1.data('__resources', atmos1Resources);
-	natural_life.data('__resources', atmos4Resources);
-	oceans.data('__resources', atmos4Resources);
-	
+
+	var atmos4 = new F("rules:type_iv_atmosphere", ["biosphere"]);
+	var atmos3 = new F("rules:type_iii_atmosphere", ["biosphere"]);
+	var atmos2 = new F("rules:type_ii_atmosphere", ["biosphere"]);
+	var atmos1 = new F("rules:type_i_atmosphere", ["biosphere"]);
+	var natural_life = new F("rules:natural_life", ["biosphere"]);
+	var oceans = new F("rules:oceans", ["biosphere"]);
+	atmos4.data('__resources', biosphereCost(1));	
+	atmos3.data('__resources', biosphereCost(2));	
+	atmos2.data('__resources', biosphereCost(3));	
+	atmos1.data('__resources', biosphereCost(4));	
+	natural_life.data('__resources', biosphereCost(1));	
+	oceans.data('__resources', biosphereCost(1));
+
 	// automatically create the rest of the features with wiki data.
 	
 	/**
@@ -131,7 +92,7 @@
 		// return created/fetched feature
 		return f;
 		} catch(e) {
-            console.log('Failed for ',id); 
+			console.log('Failed for ',id); 
 		}
 	}
 	
@@ -163,12 +124,12 @@
 			feature.data('benefit', {
 					'hot orbits': parseInt(properties['Hot Orbits'][0]),
 					'goldilocks orbits': parseInt(properties['Goldilocks Orbits'][0]),
-					    'cold orbits': parseInt(properties['Cold Orbits'][0])
+						'cold orbits': parseInt(properties['Cold Orbits'][0])
 			});
 
 			// some more data
 			feature.data('cost', {
-					    'gas mass': parseInt(properties['Gas Cost'][0])
+						'gas mass': parseInt(properties['Gas Cost'][0])
 			});
 			}
 		} else {
@@ -176,7 +137,7 @@
 		}
 	});
 	
-	// gass giants
+	// gas giants
 	var qb = wiki.qb();
 	wiki.queryResources(qb.query(
 		qb.fields('?s'),
