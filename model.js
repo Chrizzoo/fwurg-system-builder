@@ -61,17 +61,14 @@ var mergeResourceObjects = function(obj1, obj2) {
  * Determines the cost of the feature, based on custom data and
  * the context of use.
  */
-Feature.prototype.cost = function(system, orbit, orbital) {
-	return resourcesPartial('__resources_cost')(system, orbit, orbital);
-}
+Feature.prototype.cost = resourcesPartial('__resources_cost');
+
 
 /**
  * Determines the benefit of the feature, based on custom data and
  * the context of use.
  */
-Feature.prototype.benefit = function(system, orbit, orbital) {
-	return resourcesPartial('__resources_benefit')(system, orbit, orbital);
-}
+Feature.prototype.benefit = resourcesPartial('__resources_benefit');
 
 /**
  * Determines the cost and benefit of the feature, based on custom data and
@@ -143,7 +140,7 @@ var orbitalResourcesPartial = function(function_val) {
 		for(var i in fs) {
 			var f = fs[i];
 			var fn = f[function_val];
-			var c = fn(this.orbit().system(), this.orbit(), this);			
+			var c = fn.apply(f, [this.orbit().system(), this.orbit(), this]);	
 			for(var x in c) {
 				if(typeof r[x] == 'undefined') r[x]=0;
 				r[x] += c[x];
@@ -153,13 +150,8 @@ var orbitalResourcesPartial = function(function_val) {
 	};
 }
 
-Orbital.prototype.cost = function(r) {
-	return orbitalResourcesPartial('cost')(r);
-}
-
-Orbital.prototype.benefit = function(r) {
-	return orbitalResourcesPartial('benefit')(r);
-}
+Orbital.prototype.cost = orbitalResourcesPartial('cost');
+Orbital.prototype.benefit = orbitalResourcesPartial('benefit');
 
 /**
  * Determines the resources of this orbital.
@@ -203,7 +195,7 @@ var orbitResourcesPartial = function(function_val) {
 		for(var i in fs) {
 			var f = fs[i];
 			var fn = f[function_val];
-			var c = fn(this.orbit().system(), this.orbit());
+			var c = fn.apply(f, [this.system(), this]);
 			for(var x in c) {
 				if(typeof r[x] == 'undefined') r[x]=0;
 				r[x] += c[x];
@@ -217,13 +209,8 @@ var orbitResourcesPartial = function(function_val) {
 	};
 }
 
-Orbit.prototype.cost = function(r) {
-	return orbitResourcesPartial('cost')(r);
-}
-
-Orbit.prototype.benefit = function(r) {
-	return orbitResourcesPartial('benefit')(r);
-}
+Orbit.prototype.cost = orbitResourcesPartial('cost');
+Orbit.prototype.benefit = orbitResourcesPartial('benefit');
 
 
 /**
