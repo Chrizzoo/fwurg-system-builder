@@ -80,8 +80,6 @@ Feature.prototype.resources = function(system, orbit, orbital) {
 	return mergeResourceObjects(cost, benefit);
 }
 
-
-
 /**
  * Adds the feature aspect to a type.
  */
@@ -157,9 +155,10 @@ Orbital.prototype.benefit = orbitalResourcesPartial('benefit');
  * Determines the resources of this orbital.
  */
 Orbital.prototype.resources = function(r) {
-	var cost = this.cost(r);
-	var benefit = this.benefit(r);
-	return mergeResourceObjects(cost, benefit);
+	if(typeof r == 'undefined') r = {};
+	this.cost(r);
+	this.benefit(r);
+	return r;
 }
 
 /**
@@ -203,7 +202,7 @@ var orbitResourcesPartial = function(function_val) {
 		}
 		for(var k in this._orbitals) {
 			var fn = this._orbitals[k][function_val];
-			fn(r);
+			fn.apply(this._orbitals[k], [r]);
 		}
 		return r;
 	};
@@ -217,16 +216,75 @@ Orbit.prototype.benefit = orbitResourcesPartial('benefit');
  * Determines the resources of this orbit.
  */
 Orbit.prototype.resources = function(r) {
-	var cost = this.cost(r);
-	var benefit = this.benefit(r);
-	return mergeResourceObjects(cost, benefit);
+	if(typeof r == 'undefined') r = {};
+	this.cost(r);
+	this.benefit(r);
+	return r;
 }
 
+var System = function(startingResources) {
+	this._name = "";
+	this._star = null;
+	this._orbits = [];
+	this._remainingResources = startingResources;
+	this.init();
+};
+
+
+System.prototype.init = function(){}
+	
+featurify(System);
+
+System.prototype.name = function(v){if(typeof v=='undefined')return this._name; this._name=v; return this;};
+System.prototype.star = function(v){if(typeof v=='undefined')return this._star; this._star=v; return this;};
+System.prototype.addOrbit = function(orb, i){ if(typeof i=='undefined') this._orbits.push(orb); else this._orbits[i] = orb; return this;};
+System.prototype.Orbits = function () { return this._orbits; }
+
+var systemResourcesPartial = function(function_val) {
+	return function(r) {
+		if(typeof r == 'undefined') r = {};
+		var fs = this.features();
+		for(var i in fs) {
+			var f = fs[i];
+			var fn = f[function_val];
+			var c = fn.apply(f, [this]);
+			for(var x in c) {
+				if(typeof r[x] == 'undefined') r[x]=0;
+				r[x] += c[x];
+			}
+		}
+		
+		// get the resources from the star
+		var s = this._star[function_val];
+		s.apply(this._star, [r]);
+		
+		// get the resources from the orbits
+		for(var k in this._orbits) {
+			var fn = this._orbits[k][function_val];
+			fn.apply(this._orbits[k], [r]);
+		}
+		return r;
+	};
+}
+
+System.prototype.cost = systemResourcesPartial('cost');
+System.prototype.benefit = systemResourcesPartial('benefit');
+
+/**
+ * Determines the resources of the whole system (all orbits and the star).
+ */
+System.prototype.resources = function(r) {
+	if(typeof r == 'undefined') r = this._remainingResources;
+	this.cost(r);
+	this.benefit(r);
+	return r;
+}
 
 fwurg.system = {
 	Orbit: Orbit,
 	Orbital: Orbital,
-	Feature: Feature
+	Feature: Feature,
+	System: System
 };
 
 

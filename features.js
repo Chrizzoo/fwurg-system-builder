@@ -38,9 +38,9 @@
 
 			// custom cost
 			if (orbit.hasFeature(goldilocks_orbit)) {
-				result['gass mass'] = gold;
+				result['gas mass'] = gold;
 			} else {
-				result['gass mass'] = normal;
+				result['gas mass'] = normal;
 			}
 			return result;
 		};
@@ -251,6 +251,8 @@
 		}
 		
 		console.log("loaded features from wiki.");
+		fwurg.system.init();
+	
 	});
 	
 })(fwurg, jQuery);
