@@ -61,14 +61,14 @@ var mergeResourceObjects = function(obj1, obj2) {
  * Determines the cost of the feature, based on custom data and
  * the context of use.
  */
-Feature.prototype.cost = resourcesPartial('__resources_cost');
+Feature.prototype.cost = resourcesPartial('_cost');
 
 
 /**
  * Determines the benefit of the feature, based on custom data and
  * the context of use.
  */
-Feature.prototype.benefit = resourcesPartial('__resources_benefit');
+Feature.prototype.benefit = resourcesPartial('_benefit');
 
 /**
  * Determines the cost and benefit of the feature, based on custom data and
