@@ -47,16 +47,16 @@
 	}
 	
 	var brown_dwarf = new F("rules:brown_dwarf", ["gas_giant_type", "planet_type"]);
-	brown_dwarf.data('__resources_cost', gasGiantCost(-5, -9));
-	brown_dwarf.data('__resources_benefit', defaultBenefit);
+	brown_dwarf.data('_cost', gasGiantCost(-5, -9));
+	brown_dwarf.data('_benefit', defaultBenefit);
 
 	var jovian_giant = new F("rules:jovian_giant", ["gas_giant_type", "planet_type"]);
-	jovian_giant.data('__resources_cost', gasGiantCost(-4, -5));
-	jovian_giant.data('__resources_benefit', defaultBenefit);
+	jovian_giant.data('_cost', gasGiantCost(-4, -5));
+	jovian_giant.data('_benefit', defaultBenefit);
 	
 	var ice_giant = new F("rules:ice_giant", ["gas_giant_type", "planet_type"]);
-	ice_giant.data('__resources_cost', gasGiantCost(-1, -3));
-	ice_giant.data('__resources_benefit', defaultBenefit);
+	ice_giant.data('_cost', gasGiantCost(-1, -3));
+	ice_giant.data('_benefit', defaultBenefit);
 	
 	// -- Atmospheres
 	
@@ -80,19 +80,19 @@
 	var natural_life = new F("rules:natural_life", ["biosphere"]);
 	var oceans = new F("rules:oceans", ["biosphere"]);
 
-	atmos4.data('__resources_cost', biosphereCost(1));	
-	atmos3.data('__resources_cost', biosphereCost(2));	
-	atmos2.data('__resources_cost', biosphereCost(3));	
-	atmos1.data('__resources_cost', biosphereCost(4));	
-	natural_life.data('__resources_cost', biosphereCost(1));	
-	oceans.data('__resources_cost', biosphereCost(1));
+	atmos4.data('_cost', biosphereCost(1));	
+	atmos3.data('_cost', biosphereCost(2));	
+	atmos2.data('_cost', biosphereCost(3));	
+	atmos1.data('_cost', biosphereCost(4));	
+	natural_life.data('_cost', biosphereCost(1));	
+	oceans.data('_cost', biosphereCost(1));
 
-	atmos4.data('__resources_benefit', defaultBenefit);
-	atmos3.data('__resources_benefit', defaultBenefit);
-	atmos2.data('__resources_benefit', defaultBenefit);
-	atmos1.data('__resources_benefit', defaultBenefit);
-	natural_life.data('__resources_benefit', defaultBenefit);
-	oceans.data('__resources_benefit', defaultBenefit);
+	atmos4.data('_benefit', defaultBenefit);
+	atmos3.data('_benefit', defaultBenefit);
+	atmos2.data('_benefit', defaultBenefit);
+	atmos1.data('_benefit', defaultBenefit);
+	natural_life.data('_benefit', defaultBenefit);
+	oceans.data('_benefit', defaultBenefit);
 
 	atmos4.data('image', "rules:type_iv_atmosphere.png");
 	atmos3.data('image', "rules:type_iv_atmosphere.png");
@@ -125,8 +125,8 @@
 			} else {
 				f = new F(id, map['is a']);
 				// set default resources method
-				f.data('__resources_cost', defaultCost);
-				f.data('__resources_benefit', defaultBenefit);
+				f.data('_cost', defaultCost);
+				f.data('_benefit', defaultBenefit);
 				
 				f.data('name', map['entry title'][0]);
 				f.data('image', map['Image'][0]);
