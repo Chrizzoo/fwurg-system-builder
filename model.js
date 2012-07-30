@@ -222,11 +222,10 @@ Orbit.prototype.resources = function(r) {
 	return r;
 }
 
-var System = function(startingResources) {
+var System = function() {
 	this._name = "";
 	this._star = null;
 	this._orbits = [];
-	this._remainingResources = startingResources;
 	this.init();
 };
 
@@ -274,7 +273,7 @@ System.prototype.benefit = systemResourcesPartial('benefit');
  * Determines the resources of the whole system (all orbits and the star).
  */
 System.prototype.resources = function(r) {
-	if(typeof r == 'undefined') r = this._remainingResources;
+	if(typeof r == 'undefined') r = {};
 	this.cost(r);
 	this.benefit(r);
 	return r;

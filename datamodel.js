@@ -2,11 +2,16 @@
 
 
 fwurg.system.init = function () {
-	var system = new fwurg.system.System({
+	
+	// starting resources to feed to a system.resources call.
+	var startingResources = {
 		'gas mass': 50,
 		'rock mass': 100,
 		'bio mass': 200
-	});
+	};
+	
+	var system = new fwurg.system.System();
+	
 	// alias the Orbit constructor
 	var O = fwurg.system.Orbit;
 
@@ -32,9 +37,11 @@ fwurg.system.init = function () {
 	orbital.addFeature("rules:large_planet");
 	orbital.addFeature("rules:type_ii_atmosphere");
 	orbital.addFeature("rules:oceans");
+	
+	// debug prints.
 	console.log(orbital.resources());
 	console.log(system);
-	console.log(system.resources());
+	console.log(system.resources(startingResources));
 	
 }
 
