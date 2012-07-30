@@ -94,6 +94,20 @@
 	natural_life.data('__resources_benefit', defaultBenefit);
 	oceans.data('__resources_benefit', defaultBenefit);
 
+	atmos4.data('image', "rules:type_iv_atmosphere.png");
+	atmos3.data('image', "rules:type_iv_atmosphere.png");
+	atmos2.data('image', "rules:type_ii_atmosphere.png");
+	atmos1.data('image', "rules:type_i_atmosphere.png");
+	natural_life.data('image', "");
+	oceans.data('image', "rules:water_ocean.png");
+
+	atmos4.data('name', "Type IV Atmosphere");
+	atmos3.data('name', "Type III Atmosphere");
+	atmos2.data('name', "Type II Atmosphere");
+	atmos1.data('name', "Type I Atmosphere");
+	natural_life.data('name', "Natural Life");
+	oceans.data('name', "Oceans");
+
 	// automatically create the rest of the features with wiki data.
 	
 	/**
@@ -113,6 +127,9 @@
 				// set default resources method
 				f.data('__resources_cost', defaultCost);
 				f.data('__resources_benefit', defaultBenefit);
+				
+				f.data('name', map['entry title'][0]);
+				f.data('image', map['Image'][0]);
 			}
 		// return created/fetched feature
 		return f;
@@ -161,7 +178,6 @@
 		if(data.stars.status == 'ok') {
 			for(var k in data.stars.body) {
 				var properties = data.stars.body[k];
-
 				// create feature.
 				var feature = createFeature(k, properties);
 
@@ -185,7 +201,6 @@
 		if(data.gas_giants.status == 'ok') {
 			for(var k in data.gas_giants.body) {
 				var properties = data.gas_giants.body[k];
-
 				// create feature.
 				var feature = createFeature(k, properties);
 
@@ -194,6 +209,12 @@
 					'lunar orbits': parseInt(properties['Lunar Orbits'][0]),
 					'zones': parseInt(properties['Zones'][0])
 				});
+				
+				// add name and image here because they do not use the normal feature creation.
+				feature.data('name', properties['entry title'][0]);
+				feature.data('image', properties['Image'][0]);
+				
+				feature.data('description', properties['Description'][0]);
 			}
 		} else {
 			console.log(data.gas_giants);
@@ -203,7 +224,6 @@
 		if(data.planets.status == 'ok') {
 			for(var k in data.planets.body) {
 				var properties = data.planets.body[k];
-
 				// create feature.
 				var feature = createFeature(k, properties);
 				// some more data
@@ -214,6 +234,7 @@
 				feature.data('cost', {
 					'rock mass': parseInt(properties['Cost'][0])
 				});
+				feature.data('description', properties['Description'][0]);
 			}
 		} else {
 			console.log(data.planets);
@@ -233,6 +254,7 @@
 					'lunar orbits': parseInt(properties['Lunar Orbits Used'][0]),
 					'rock mass': parseInt(properties['Cost'][0])
 				});
+				feature.data('description', properties['Description'][0]);
 			}
 		} else {
 			console.log(data.moons);
@@ -245,6 +267,7 @@
 				// create feature.
 				var feature = createFeature(k, properties);
 				// no need for additional data?
+				feature.data('description', properties['Description'][0]);
 			}
 		} else {
 			console.log(data.climates);
