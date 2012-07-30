@@ -108,6 +108,20 @@ var featurify = function(type) {
 			return this;
 		}
 	}
+	/**
+	 * Returns a list of features that have class name = true.
+	 */
+	type.prototype.featuresByClass = function(name) {
+			var r=[];
+			for(var f in this._features) {
+				var feat = Feature.get(f);
+				if (feat.isA(name)) {
+					r.push(feat);
+				}
+			}
+			return r;
+	}
+	
 }
 
 
@@ -224,7 +238,6 @@ Orbit.prototype.resources = function(r) {
 
 var System = function() {
 	this._name = "";
-	this._star = null;
 	this._orbits = [];
 	this.init();
 };
@@ -235,9 +248,9 @@ System.prototype.init = function(){}
 featurify(System);
 
 System.prototype.name = function(v){if(typeof v=='undefined')return this._name; this._name=v; return this;};
-System.prototype.star = function(v){if(typeof v=='undefined')return this._star; this._star=v; return this;};
 System.prototype.addOrbit = function(orb, i){ if(typeof i=='undefined') this._orbits.push(orb); else this._orbits[i] = orb; return this;};
-System.prototype.Orbits = function () { return this._orbits; }
+System.prototype.removeOrbit = function(orb){for(var i in this._orbits) if(orb == this._orbits[i]) delete this._orbits[i]; return this;}
+System.prototype.orbits = function(){var r = [];for(var k in this._orbits) r.push(this._orbits[k]); return r;};
 
 var systemResourcesPartial = function(function_val) {
 	return function(r) {
@@ -252,10 +265,6 @@ var systemResourcesPartial = function(function_val) {
 				r[x] += c[x];
 			}
 		}
-		
-		// get the resources from the star
-		var s = this._star[function_val];
-		s.apply(this._star, [r]);
 		
 		// get the resources from the orbits
 		for(var k in this._orbits) {
