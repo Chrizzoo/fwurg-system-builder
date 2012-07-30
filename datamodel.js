@@ -9,15 +9,28 @@ fwurg.system.init = function () {
 		'rock mass': 100,
 		'bio mass': 200
 	};
+			
+	// create a clean system.
+	var system = new fwurg.system.System();
 	
-	var system = fwurg.system.applyStar("rules:orange_giant_star");
+	// star orbit + 10 orbits.
+	for(i = 0; i <= 10; i++) {
+		system.addOrbit(new fwurg.system.Orbit(system));
+	}
 	
-	var orbit_0 = system.Orbits()[0];
-	var giant = new fwurg.system.Orbital(orbit_0);
-	orbit_0.addOrbital(giant);
+	// get the orbits for editting.
+	var orbits = system.orbits();
+	
+	// apply a star and set the orbit type features accordingly.
+	fwurg.system.applyStar(orbits, "rules:orange_giant_star", 4);
+	
+	// apply some features.
+	var orbit_1 = orbits[1];
+	var giant = new fwurg.system.Orbital(orbit_1);
+	orbit_1.addOrbital(giant);
 	giant.addFeature("rules:brown_dwarf");
 	
-	var orbit = system.Orbits()[2];
+	var orbit = orbits[2];
 	var orbital = new fwurg.system.Orbital(orbit);
 	orbit.addOrbital(orbital);
 	orbital.addFeature("rules:large_planet");
@@ -32,37 +45,53 @@ fwurg.system.init = function () {
 }
 
 /**
-  * Apply a star feature, creating a new system with the necessary orbits.
+  * Apply a star feature to a system and set the orbits according to the stars orbits.
   */
-fwurg.system.applyStar = function(starFeature) {
-	// alias the Orbit constructor
-	var O = fwurg.system.Orbit;
+fwurg.system.applyStar = function(orbits, starFeature, starIndex) {
 	
-	// create a clean system.
-	var s = new fwurg.system.System();
+	var current = 0;
+
+	for (x in orbits) {
+		// remove the old orbit types
+		var selectedFeatures = orbits[x].featuresByClass('orbit_type');
+		for(y in selectedFeatures) {
+			orbits[x].removeFeature(selectedFeatures[y].id());
+		}
+	}
 	
-	// add the star feature to the star orbit.
-	s.star(new O(s).addFeature(starFeature));
+	// add the star feature to the starIndex orbit.
+	orbits[starIndex].addFeature("rules:star_orbit").addFeature(starFeature);
 	
+	// get the star feature and fetch the orbit amounts.
 	var f = fwurg.system.Feature.get(starFeature);
 	var orbitresources = f.benefit();
 	
-	if(typeof orbitresources['hot orbits'] != 'undefined') {
-		for(i = 0; i < orbitresources['hot orbits']; i++) {
-			s.addOrbit(new O(s).addFeature("rules:hot_orbit"));
+	// some debug info.
+	console.log("applied: "+ f._data.name);
+	console.log(orbitresources);
+	
+	// assign the amount of orbit_name with the orbit_type feature
+	var handleOrbits = function(orbit_name, orbit_type) {
+		if(typeof orbitresources[orbit_name] != 'undefined') {
+			for(i = 0; i < orbitresources[orbit_name]; i++) {
+				if (current == starIndex) {
+					current++;
+				}
+				orbits[current].addFeature(orbit_type);
+				current++;
+			}
 		}
 	}
-	if(typeof orbitresources['goldilocks orbits'] != 'undefined') {
-		for(i = 0; i < orbitresources['goldilocks orbits']; i++) {
-			s.addOrbit(new O(s).addFeature("rules:goldilocks_orbit"));
+	handleOrbits('hot orbits', "rules:hot_orbit");
+	handleOrbits('goldilocks orbits', "rules:goldilocks_orbit");
+	handleOrbits('cold orbits', "rules:cold_orbit");
+
+	for (i = current; i <= 10; i++) {
+		if (i != starIndex) {
+			orbits[i].addFeature("rules:no_orbit");
 		}
+
 	}
-	if(typeof orbitresources['cold orbits'] != 'undefined') {
-		for(i = 0; i < orbitresources['cold orbits']; i++) {
-			s.addOrbit(new O(s).addFeature("rules:cold_orbit"));
-		}
-	}
-	return s;
 }
 
 })(fwurg);
