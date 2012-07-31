@@ -123,28 +123,24 @@ var featurify = function(type) {
 		}
 	}
 	/**
-	 * Returns a list of features that have class name = true.
+	 * Returns all features with the given class on this object.
 	 */
-	type.prototype.featuresByClass = function(name) {
+	type.prototype.featuresByClass = function(classname) {
 			var r=[];
-			for(var f in this._features) {
-				var feat = Feature.get(f);
-				if (feat.isA(name)) {
-					r.push(feat);
+            var fs = this.features();
+			for(var i=0;i<fs.length;i++) {
+				if (fs[i].isA(classname)) {
+					r.push(fs[i]);
 				}
 			}
 			return r;
 	}
 	/**
-	 * Removes all the features that have class name = true.
+	 * Removes all the features with the given class.
 	 */
-	type.prototype.removeFeaturesByClass = function(name) {
-			for(var f in this._features) {
-				var feat = Feature.get(f);
-				if (feat.isA(name)) {
-					this.removeFeature(f);
-				}
-			}
+	type.prototype.removeFeaturesByClass = function(classname) {
+        var fs = this.featuresByClass(classname);
+		for(var i=0;i<fs.length;i++) this.removeFeature(fs[i]);
 		return this;
 	}
 	
