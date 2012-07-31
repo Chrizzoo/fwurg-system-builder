@@ -1,6 +1,7 @@
 (function(fwurg){
 
-
+fwurg.system.datamodel = {};
+	
 fwurg.system.init = function () {
 	
 	// starting resources to feed to a system.resources call.
@@ -22,7 +23,7 @@ fwurg.system.init = function () {
 	var orbits = system.orbits();
 	
 	// apply a star and set the orbit type features accordingly.
-	fwurg.system.applyStar(orbits, "rules:orange_giant_star", 4);
+	fwurg.system.applyStar(orbits, "rules:orange_giant_star", 0);
 	
 	// apply some features.
 	var orbit_1 = orbits[1];
@@ -30,7 +31,7 @@ fwurg.system.init = function () {
 	orbit_1.addOrbital(giant);
 	giant.addFeature("rules:brown_dwarf");
 	
-	var orbit = orbits[2];
+	var orbit = orbits[3];
 	var orbital = new fwurg.system.Orbital(orbit);
 	orbit.addOrbital(orbital);
 	orbital.addFeature("rules:large_planet");
@@ -38,9 +39,12 @@ fwurg.system.init = function () {
 	orbital.addFeature("rules:oceans");
 	
 	// debug prints.
-	console.log(orbital.resources());
 	console.log(system);
 	console.log(system.resources(startingResources));
+	
+	fwurg.system.datamodel = system;
+	fwurg.system.view.drawSystem();
+
 	
 }
 
@@ -93,5 +97,8 @@ fwurg.system.applyStar = function(orbits, starFeature, starIndex) {
 
 	}
 }
+
+
+
 
 })(fwurg);

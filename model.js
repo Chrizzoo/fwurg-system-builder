@@ -25,6 +25,20 @@ Feature.exists= function (id) {
 	return typeof(Feature._list[id]) != 'undefined';
 }
 
+/**
+ * Returns a list of features that have class name = true.
+ */
+Feature.getByClass = function(name) {
+	var r=[];
+	for(var id in Feature._list) {
+		var feat = Feature._list[id];
+		if (feat.isA(name)) {
+			r.push(feat);
+		}
+	}
+	return r;
+}
+
 //generic getters/setters
 Feature.prototype.id = function(){return this._id;};
 Feature.prototype.toString = Feature.prototype.id;

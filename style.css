@@ -1,0 +1,65 @@
+.container {
+	width: 100%;
+	float: left;
+}
+
+
+#overview {
+	margin: 5px;
+	background-color: grey;
+	
+}
+
+#controls {
+	margin: 5px;
+	background-color: yellow;
+	
+}
+
+#options {
+	margin: 5px;
+	background-color: purple;
+}
+
+
+.orbit {
+	float: left;
+	width: 150px;
+	height: 200px;
+	border: 1px solid black;
+}
+
+.orbital {
+	float: left;
+	width: 50px;
+	height: 50px;
+	border: 1px solid black;
+	background-color: brown;
+}
+
+.star_orbit {
+	background-color: black;
+	color: white;
+}
+
+.hot_orbit {
+	background-color: red;
+}
+
+.goldilocks_orbit {
+	background-color: green;
+}
+
+.cold_orbit {
+	background-color: blue;
+}
+
+.no_orbit {
+	border: none;	
+}
+
+.orbit_control {
+	float: left;
+	width: 150px;
+	height: 200px;
+}
