@@ -1,6 +1,6 @@
 (function(fwurg){
 
-fwurg.system.datamodel = {};
+fwurg.system.systemmodel = {};
 	
 fwurg.system.init = function () {
 	
@@ -14,6 +14,9 @@ fwurg.system.init = function () {
 	// create a clean system.
 	var system = new fwurg.system.System();
 	
+	// assign to accessible variable.
+	fwurg.system.systemmodel = system;
+	
 	// star orbit + 10 orbits.
 	for(i = 0; i <= 10; i++) {
 		system.addOrbit(new fwurg.system.Orbit(system));
@@ -23,7 +26,7 @@ fwurg.system.init = function () {
 	var orbits = system.orbits();
 	
 	// apply a star and set the orbit type features accordingly.
-	fwurg.system.applyStar(orbits, "rules:orange_giant_star", 0);
+	fwurg.system.applyStar("rules:orange_giant_star", 0);
 	
 	// apply some features.
 	var orbit_1 = orbits[1];
@@ -41,9 +44,9 @@ fwurg.system.init = function () {
 	// debug prints.
 	console.log(system);
 	console.log(system.resources(startingResources));
-	
-	fwurg.system.datamodel = system;
+
 	fwurg.system.view.drawSystem();
+	fwurg.system.view.drawControls();
 
 	
 }
@@ -51,8 +54,8 @@ fwurg.system.init = function () {
 /**
   * Apply a star feature to a system and set the orbits according to the stars orbits.
   */
-fwurg.system.applyStar = function(orbits, starFeature, starIndex) {
-	
+fwurg.system.applyStar = function(starFeature, starIndex) {
+	var orbits = fwurg.system.systemmodel.orbits();
 	var current = 0;
 
 	for (x in orbits) {
@@ -97,8 +100,5 @@ fwurg.system.applyStar = function(orbits, starFeature, starIndex) {
 
 	}
 }
-
-
-
 
 })(fwurg);

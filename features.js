@@ -64,7 +64,7 @@
 	
 	// debug ->var orbit = new fwurg.system.Orbit("test"); fwurg.system.Feature._list["rules:type_iii_atmosphere"].resources("test", orbit, new fwurg.system.Orbital(orbit).addFeature("rules:large_planet"));
 
-    // declare biosphere cost generator
+	// declare biosphere cost generator
 	var biosphereCost = function(factor) {
 		return function(system, orbit, orbital) {
 			var result = {};
@@ -81,35 +81,35 @@
     	.data('image', "rules:type_iv_atmosphere.png")
     	.data('name', "Type IV Atmosphere");
 
-	var atmos3 = new F("rules:type_iii_atmosphere", ["biosphere"]);
-	var atmos2 = new F("rules:type_ii_atmosphere", ["biosphere"]);
-	var atmos1 = new F("rules:type_i_atmosphere", ["biosphere"]);
-	var natural_life = new F("rules:natural_life", ["biosphere"]);
-	var oceans = new F("rules:oceans", ["biosphere"]);
-
-	atmos3.data('_cost', biosphereCost(2));	
-	atmos2.data('_cost', biosphereCost(3));	
-	atmos1.data('_cost', biosphereCost(4));	
-	natural_life.data('_cost', biosphereCost(1));	
-	oceans.data('_cost', biosphereCost(1));
-
-	atmos3.data('_benefit', defaultBenefit);
-	atmos2.data('_benefit', defaultBenefit);
-	atmos1.data('_benefit', defaultBenefit);
-	natural_life.data('_benefit', defaultBenefit);
-	oceans.data('_benefit', defaultBenefit);
-
-	atmos3.data('image', "rules:type_iv_atmosphere.png");
-	atmos2.data('image', "rules:type_ii_atmosphere.png");
-	atmos1.data('image', "rules:type_i_atmosphere.png");
-	natural_life.data('image', "");
-	oceans.data('image', "rules:water_ocean.png");
-
-	atmos3.data('name', "Type III Atmosphere");
-	atmos2.data('name', "Type II Atmosphere");
-	atmos1.data('name', "Type I Atmosphere");
-	natural_life.data('name', "Natural Life");
-	oceans.data('name', "Oceans");
+	var atmos3 = new F("rules:type_iii_atmosphere", ["biosphere"])
+	.data('_cost', biosphereCost(2))
+	.data('_benefit', defaultBenefit)
+	.data('image', "rules:type_iv_atmosphere.png")
+	.data('name', "Type III Atmosphere");
+	
+	var atmos2 = new F("rules:type_ii_atmosphere", ["biosphere"])
+	.data('_cost', biosphereCost(3))
+	.data('_benefit', defaultBenefit)
+	.data('image', "rules:type_ii_atmosphere.png")
+	.data('name', "Type II Atmosphere");
+	
+	var atmos1 = new F("rules:type_i_atmosphere", ["biosphere"])
+	.data('_cost', biosphereCost(4))
+	.data('_benefit', defaultBenefit)
+	.data('image', "rules:type_i_atmosphere.png")
+	.data('name', "Type I Atmosphere");
+	
+	var natural_life = new F("rules:natural_life", ["biosphere"])
+	.data('_cost', biosphereCost(1))
+	.data('_benefit', defaultBenefit)
+	.data('image', "")
+	.data('name', "Natural Life");
+	
+	var oceans = new F("rules:oceans", ["biosphere"])
+	.data('_cost', biosphereCost(1))
+	.data('_benefit', defaultBenefit)
+	.data('image', "rules:water_ocean.png")
+	.data('name', "Oceans");
 
 	// automatically create the rest of the features with wiki data.
 	
@@ -118,7 +118,7 @@
 	  * creating feature with key id.
 	  * getting data from the map.
 	 */
-	var createFeature = function(id, map) {
+	var createFeature = function(id, map, noDescription) {
 		try {
 			var f = null;
 
@@ -133,6 +133,9 @@
 				
 				f.data('name', map['entry title'][0]);
 				f.data('image', map['Image'][0]);
+				if (typeof noDescription == 'undefined') {
+					f.data('description', map['Description'][0]);
+				}
 			}
 		// return created/fetched feature
 		return f;
@@ -182,7 +185,7 @@
 			for(var k in data.stars.body) {
 				var properties = data.stars.body[k];
 				// create feature.
-				var feature = createFeature(k, properties);
+				var feature = createFeature(k, properties, true);
 
 				// set relevant data
 				feature.data('benefit', {
@@ -216,8 +219,6 @@
 				// add name and image here because they do not use the normal feature creation.
 				feature.data('name', properties['entry title'][0]);
 				feature.data('image', properties['Image'][0]);
-				
-				feature.data('description', properties['Description'][0]);
 			}
 		} else {
 			console.log(data.gas_giants);
@@ -237,7 +238,6 @@
 				feature.data('cost', {
 					'rock mass': parseInt(properties['Cost'][0])
 				});
-				feature.data('description', properties['Description'][0]);
 			}
 		} else {
 			console.log(data.planets);
@@ -257,7 +257,6 @@
 					'lunar orbits': parseInt(properties['Lunar Orbits Used'][0]),
 					'rock mass': parseInt(properties['Cost'][0])
 				});
-				feature.data('description', properties['Description'][0]);
 			}
 		} else {
 			console.log(data.moons);
@@ -270,7 +269,6 @@
 				// create feature.
 				var feature = createFeature(k, properties);
 				// no need for additional data?
-				feature.data('description', properties['Description'][0]);
 			}
 		} else {
 			console.log(data.climates);

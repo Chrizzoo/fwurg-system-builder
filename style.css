@@ -58,8 +58,22 @@
 	border: none;	
 }
 
+.control {
+	float: left;
+	width: 150px;
+	height: 100px;
+	border: 1px solid black;
+}
+
 .orbit_control {
 	float: left;
 	width: 150px;
 	height: 200px;
+}
+
+.option {
+	float: left;
+	width: 150px;
+	height: 100px;
+	border: 1px solid black;
 }

@@ -135,6 +135,18 @@ var featurify = function(type) {
 			}
 			return r;
 	}
+	/**
+	 * Removes all the features that have class name = true.
+	 */
+	type.prototype.removeFeaturesByClass = function(name) {
+			for(var f in this._features) {
+				var feat = Feature.get(f);
+				if (feat.isA(name)) {
+					this.removeFeature(f);
+				}
+			}
+		return this;
+	}
 	
 }
 
