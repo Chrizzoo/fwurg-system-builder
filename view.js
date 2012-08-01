@@ -65,40 +65,81 @@ var drawFeatures = function(features, objectdiv) {
 	}
 }
 
+/** 
+  * Redraw the system and empty the options.
+  */
+var redrawAfterSelection = function() {
+	$('#options').empty();
+	fwurg.system.view.drawSystem();
+	fwurg.system.view.drawControls();
+}
+
+/** 
+  * Remove the old star from the system because you only want 1 system in the orbitIndex orbit. 
+  */
+var removeOldStar = function (orbitIndex) {
+	var orbits = fwurg.system.systemmodel.orbits();
+	orbits[orbitIndex].removeFeaturesByClass("star_class");
+}
+
+/** 
+  * Add an orbital to the orbitIndex. The orbital gets the orbitalfeature.
+  */
+var createNewOrbital = function (orbitIndex, orbitalFeature) {
+	var orbits = fwurg.system.systemmodel.orbits();
+	console.log(orbitIndex);
+	var orb = new fwurg.system.Orbital(orbits[orbitIndex]);
+	orb.addFeature(orbitalFeature);
+	orbits[orbitIndex].addOrbital(orb);
+}
+
+/*
+ * helper function that returns a function that handles applying a new star feature.
+ */
+var starFunction = function(orbitIndex) {
+	return function() {
+		addOptions(["star_class"], function(starFeature) {
+			removeOldStar(orbitIndex);
+			fwurg.system.applyStar(starFeature, orbitIndex);
+			redrawAfterSelection();
+		});
+	};
+}
+
+var orbitalFunction = function(orbitIndex) {
+	return function() {
+		addOptions(["planet_type", "moon_type"], function(orbitalFeature) {
+			createNewOrbital(orbitIndex, orbitalFeature);
+			redrawAfterSelection();
+		});
+	};
+}
+
+
 /**
  * Draw the controls in the #controls element and applies click functions.
  */
 fwurg.system.view.drawControls = function() {
+	var controls = $('#controls').empty();
 	var system = fwurg.system.systemmodel;
 	var orbits = system.orbits();
-	for (x in orbits) {
-		var o = $("<div id='orbit_control_"+x+"' class='orbit_control' >").appendTo($("#controls"));
+	for (var x in orbits) {
+		var o = $("<div id='orbit_control_"+x+"' class='orbit_control' >").appendTo(controls);
 		if (orbits[x].hasFeature("rules:star_orbit")) {
 			var control = $("<div class='control'>Change Star</div>");
-			control.click(function() {
-				addOptions(["star_class"], starFunction(0));
-			});
+			control.click(starFunction(x));
 			control.appendTo(o);
 				
 			
 		} else if (orbits[x].hasFeature("rules:no_orbit")) {
 			// no controls.
 		} else  {
-			// orbital control.
+			var control = $("<div class='control'>Add Orbital</div>");
+			control.click(orbitalFunction(x));
+			control.appendTo(o);
 		}
 	}	
 	
-}
-
-/*
- * helper function that returns a function that handles applying a new star feature.
- */
-var starFunction = function(starIndex) {
-	return function(starFeature) {
-		removeOldStar(starIndex);
-		fwurg.system.applyStar(starFeature, starIndex);
-		redrawAfterSelection();
-	}
 }
 
 /** 
@@ -127,22 +168,6 @@ var addOptions= function(classes, clickFunction) {
 
 		}
 	}
-}
-
-/** 
-  * Redraw the system and empty the options.
-  */
-var redrawAfterSelection = function() {
-	$('#options').empty();
-	fwurg.system.view.drawSystem();
-}
-
-/** 
-  * Remove the old star from the system because you only want 1 system in the starIndex orbit. 
-  */
-var removeOldStar = function (starIndex) {
-	var orbits = fwurg.system.systemmodel.orbits();
-	orbits[starIndex].removeFeaturesByClass("star_class");
 }
 
 })(fwurg);
