@@ -1,6 +1,7 @@
 (function(fwurg){
 	
 fwurg.system.view = {};
+fwurg.system.view.imgRoot = "http://fwurg.xs4all.nl/dokuwiki/_media/";
 var orbital_count = 0;
 	
 /** 
@@ -62,6 +63,10 @@ var drawFeatures = function(features, objectdiv) {
 		
 		if (f.isA("orbit_type")) {
 			objectdiv.addClass(""+f.id().split(":")[1]);
+		}
+		else if (f.isA("star_class") || f.isA("planet_type") || f.isA("moon_type")) {
+			objectdiv.append($("<img src='"+fwurg.system.view.imgRoot+f._data.image+"?w=50' title='"+f._data.name+"'/>"))
+			
 		}
 		else {
 			// if it has no name use id.
@@ -141,7 +146,7 @@ var addOptions= function(classes, clickFunction) {
 		for (y in opts) {
 			
 			var feature = opts[y];
-			var control = $("<div id='"+feature.id()+"' class='option'>"+feature._data.name+"</div>");
+			var control = $("<div id='"+feature.id()+"' class='option'><div class='option_name'>"+feature._data.name+"</div><div class='option_image'><img src='"+fwurg.system.view.imgRoot+feature._data.image+"?w=100' /></div></div>");
 			control.data('feature', feature);
 			control.appendTo(options);
 			
