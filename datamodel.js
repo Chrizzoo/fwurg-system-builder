@@ -1,15 +1,14 @@
 (function(fwurg){
 
 fwurg.system.systemmodel = {};
-	
-fwurg.system.init = function () {
-	
-	// starting resources to feed to a system.resources call.
-	var startingResources = {
+// starting resources to feed to a system.resources call.
+fwurg.system.startingResources = {
 		'gas mass': 50,
 		'rock mass': 100,
 		'bio mass': 200
 	};
+
+fwurg.system.init = function () {
 			
 	// create a clean system.
 	var system = new fwurg.system.System();
@@ -25,30 +24,9 @@ fwurg.system.init = function () {
 	// get the orbits for editting.
 	var orbits = system.orbits();
 	
-	// apply a star and set the orbit type features accordingly.
-	fwurg.system.applyStar("rules:orange_giant_star", 0);
-	
-	// apply some features.
-	var orbit_1 = orbits[1];
-	var giant = new fwurg.system.Orbital(orbit_1);
-	orbit_1.addOrbital(giant);
-	giant.addFeature("rules:brown_dwarf");
-	
-	var orbit = orbits[3];
-	var orbital = new fwurg.system.Orbital(orbit);
-	orbit.addOrbital(orbital);
-	orbital.addFeature("rules:large_planet");
-	orbital.addFeature("rules:type_ii_atmosphere");
-	orbital.addFeature("rules:oceans");
-	
-	// debug prints.
-	console.log(system);
-	console.log(system.resources(startingResources));
+	orbits[0].addFeature("rules:star_orbit");
 
 	fwurg.system.view.drawSystem();
-	fwurg.system.view.drawControls();
-
-	
 }
 
 /**
@@ -72,10 +50,6 @@ fwurg.system.applyStar = function(starFeature, starIndex) {
 	// get the star feature and fetch the orbit amounts.
 	var f = fwurg.system.Feature.get(starFeature);
 	var orbitresources = f.benefit();
-	
-	// some debug info.
-	console.log("applied: "+ f._data.name);
-	console.log(orbitresources);
 	
 	// assign the amount of orbit_name with the orbit_type feature
 	var handleOrbits = function(orbit_name, orbit_type) {

@@ -10,7 +10,7 @@
 	
 }
 
-#controls {
+#resources {
 	margin: 5px;
 	background-color: yellow;
 	
@@ -24,7 +24,7 @@
 
 .orbit {
 	float: left;
-	width: 150px;
+	width: 100px;
 	height: 200px;
 	border: 1px solid black;
 }
@@ -60,20 +60,21 @@
 
 .control {
 	float: left;
-	width: 150px;
-	height: 100px;
+	width: 100px;
+	height: 70px;
 	border: 1px solid black;
 }
 
 .orbit_control {
 	float: left;
-	width: 150px;
-	height: 200px;
 }
 
 .option {
 	float: left;
-	width: 150px;
-	height: 100px;
+	width: 100px;
+	height: 70px;
 	border: 1px solid black;
+}
+.selected {
+	border: 2px solid white;
 }
