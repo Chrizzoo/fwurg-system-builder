@@ -71,20 +71,28 @@ body {
 	float: left;
 }
 
-.option {
+.feature {
+	position: relative;
 	float: left;
 	width: 120px;
 	height: 140px;
 	border: 1px solid black;
 }
-.option_name {
+.feature_name {
 	font-size: 11px;
 	height: 20px;
 	margin: 5px;
 }
 
-.option_image {
+.feature_image {
 	margin: 5px;
+}
+
+.remove_feature {
+	position: absolute;
+	color: red;
+	top: 10px;
+	right: 10px;
 }
 
 .selected {

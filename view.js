@@ -24,7 +24,9 @@ fwurg.system.view.drawSystem = function() {
 		o.data('orbit', orbits[x]);
 		//console.log("draw orbit "+x);
 		drawOrbit(orbits[x], o);
-	}	
+	}
+	
+	
 }
 
 
@@ -69,6 +71,9 @@ var drawFeatures = function(features, objectdiv) {
 			
 		}
 		else {
+			/*
+			handle features like planet atmosphere animations?
+			
 			// if it has no name use id.
 			if (typeof f._data.name == 'undefined') {
 				objectdiv.append(f.id()+" ");
@@ -76,6 +81,7 @@ var drawFeatures = function(features, objectdiv) {
 			else {
 				objectdiv.append(f._data.name+" ");
 			}
+			*/
 		}
 	}
 }
@@ -86,6 +92,7 @@ var drawFeatures = function(features, objectdiv) {
 var redrawAfterSelection = function() {
 	fwurg.system.view.drawSystem();
 	displayResources();
+	showFeaturesSelected();
 }
 
 /** 
@@ -126,6 +133,7 @@ var orbitalFunction = function(orbit) {
  * helper function that provides the feature options and supplies the onclick handler.
  */
 var featureFunction = function(object) {
+	showFeaturesSelected();
 	addOptions(["biosphere", "climate"], function(feature) {
 		// apply the feature to the object.
 		object.addFeature(feature);
@@ -140,13 +148,11 @@ var featureFunction = function(object) {
   */
 var addOptions= function(classes, clickFunction) {
 	var options = $('#options');
-	
 	for(x in classes) {
 		var opts = fwurg.system.Feature.getByClass(classes[x]);
 		for (y in opts) {
-			
 			var feature = opts[y];
-			var control = $("<div id='"+feature.id()+"' class='option'><div class='option_name'>"+feature._data.name+"</div><div class='option_image'><img src='"+fwurg.system.view.imgRoot+feature._data.image+"?w=100' /></div></div>");
+			var control = $("<div id='"+feature.id()+"' class='feature'><div class='feature_name'>"+feature._data.name+"</div><div class='feature_image'><img src='"+fwurg.system.view.imgRoot+feature._data.image+"?w=100' /></div></div>");
 			control.data('feature', feature);
 			control.appendTo(options);
 			
@@ -155,10 +161,65 @@ var addOptions= function(classes, clickFunction) {
 				clickFunction(feat.id());
 				}
 			);
-				
-
 		}
 	}
+}
+/** 
+  * show the features on the currently selected object.
+  */
+var showFeaturesSelected = function() {
+	var object = $('#selected_object').data('object');
+	var selected_object = $('#selected_object').empty();
+	if (typeof object != 'undefined') {
+		var features = object.features();
+		for (x in features) {
+			
+			var feature = features[x];
+			
+			if (feature.isA("orbit_type")) {
+				// skip this feature (user can not delete it)
+			}
+			else {
+				var current_feature = $("<div id='"+feature.id()+"' class='feature'><div class='feature_name'>"+feature._data.name+"</div><div class='feature_image'><img src='"+fwurg.system.view.imgRoot+feature._data.image+"?w=100' /></div></div>");
+				current_feature.appendTo(selected_object);
+				var control = $("<div class='remove_feature'>X</div>");
+				control.data('object', object);
+				control.data('feature', feature);
+				control.appendTo(current_feature);
+				control.click( function () {
+					var obj = $(this).data('object');
+					var feat = $(this).data('feature');
+					handleFeatureDeletion(obj, feat);
+					}
+				);
+			}
+		}
+	}
+}
+
+/**
+  * Function that is called when a feature deletion is requested.
+  * @param o, the object that the features belong to.
+  * @param f, the feature that is to be deleted.
+  */
+var handleFeatureDeletion = function(o, f) {
+	// if it is a planet or moon remove the whole orbital.
+	if (f.isA("planet_type") || f.isA("moon_type")) {
+		// remove the currently selected item.
+		$('#selected_object').removeData('object');
+		// remove the whole orbital.
+		o.orbit().removeOrbital(o);
+		// clear the options and featurelist
+		$('#options').empty();
+		
+	}
+	else {
+		// remove the specific feature.
+		o.removeFeature(f.id());
+	}
+	
+	redrawAfterSelection();
+	
 }
 
 /**
@@ -179,6 +240,8 @@ var selectSystemObject = function (objectId) {
 		if ($(this).hasClass('orbit')) {
 			var orbitIndex = $(this).attr('id').split("_")[1];
 			var orbit = $(this).data('orbit');
+			// set the currently selected object.
+			$('#selected_object').data('object', orbit);
 			if (orbit.hasFeature("rules:star_orbit")) {
 				starFunction(orbit, orbitIndex);
 			} else  {
@@ -187,10 +250,16 @@ var selectSystemObject = function (objectId) {
 		}
 		else if ($(this).hasClass('orbital')) {
 			var orbital = $(this).data('orbital');
+			// set the currently selected object.
+			$('#selected_object').data('object', orbital);
 			featureFunction(orbital);
 		}
+		// display the features on the newly selected object.
+		showFeaturesSelected();
 	}
 }
+
+
 
 /** 
  * display the resources in the resources element.
