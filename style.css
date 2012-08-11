@@ -1,35 +1,41 @@
 body {
+	background-color: black;
 	font-size: 12px;
 }
 
 .container {
-	width: 100%;
 	float: left;
 }
 
-
 #overview {
-	margin: 5px;
-	background-color: grey;
-	
-}
-
-#resources {
-	margin: 5px;
-	background-color: yellow;
-	
+	background-color: grey; 
+	width: 30%;
+	min-width: 220px;
 }
 
 #options {
-	margin: 5px;
-	background-color: purple;
+	background-color: purple; 
+	width: 40%;
+	min-width: 366px;
+}
+
+#status {
+	width: 30%;
+}
+#resources {
+	min-height: 100px;
+	background-color: orange;
+}
+
+#selected_object {
+	background-color: yellow;
 }
 
 
 .orbit {
-	float: left;
-	width: 100px;
-	height: 200px;
+	float: top;
+	height: 100px;
+	width: 200px;
 	border: 1px solid black;
 }
 
