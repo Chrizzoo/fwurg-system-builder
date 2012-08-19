@@ -27,6 +27,9 @@ fwurg.system.init = function () {
 	orbits[0].addFeature("rules:star_orbit");
 
 	fwurg.system.view.drawSystem();
+	
+	// link the system to the checker.
+	fwurg.system.checker.system(system);
 }
 
 /**

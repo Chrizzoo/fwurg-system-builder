@@ -75,25 +75,25 @@
 		};
 	}
 
-	var atmos4 = new F("rules:type_iv_atmosphere", ["biosphere"])
+	var atmos4 = new F("rules:type_iv_atmosphere", ["biosphere", "atmosphere"])
     	.data('_cost', biosphereCost(1))
     	.data('_benefit', defaultBenefit)
     	.data('image', "rules:type_iv_atmosphere.png")
     	.data('name', "Type IV Atmosphere");
 
-	var atmos3 = new F("rules:type_iii_atmosphere", ["biosphere"])
+	var atmos3 = new F("rules:type_iii_atmosphere", ["biosphere", "atmosphere"])
 	.data('_cost', biosphereCost(2))
 	.data('_benefit', defaultBenefit)
 	.data('image', "rules:type_iv_atmosphere.png")
 	.data('name', "Type III Atmosphere");
 	
-	var atmos2 = new F("rules:type_ii_atmosphere", ["biosphere"])
+	var atmos2 = new F("rules:type_ii_atmosphere", ["biosphere", "atmosphere"])
 	.data('_cost', biosphereCost(3))
 	.data('_benefit', defaultBenefit)
 	.data('image', "rules:type_ii_atmosphere.png")
 	.data('name', "Type II Atmosphere");
 	
-	var atmos1 = new F("rules:type_i_atmosphere", ["biosphere"])
+	var atmos1 = new F("rules:type_i_atmosphere", ["biosphere", "atmosphere"])
 	.data('_cost', biosphereCost(4))
 	.data('_benefit', defaultBenefit)
 	.data('image', "rules:type_i_atmosphere.png")
