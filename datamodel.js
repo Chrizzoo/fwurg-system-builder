@@ -28,8 +28,6 @@ fwurg.system.init = function () {
 
 	fwurg.system.view.drawSystem();
 	
-	// link the system to the checker.
-	fwurg.system.checker.system(system);
 }
 
 /**

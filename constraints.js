@@ -1,6 +1,10 @@
 (function(fwurg){
 
-
+function violation(os, m) { 
+  return {about: os, message: m};
+}
+	
+	
 var singlePlanetConstraint = function(system, orbit) {
 	var aboutObjects = [];
 	// orbit is important
@@ -22,9 +26,9 @@ var singlePlanetConstraint = function(system, orbit) {
 	
 	// constraint is violated.
 	if (planetCount > 1) {
-		return [aboutObjects, "Orbit can contain only one planet / gass giant"];
+		return [violation(aboutObjects, 'An orbit can contain only a single planet or gas giant')];
 	}
-	else return false;
+	else return [];
 }
 
 fwurg.system.checker = new fwurg.system.constraints.Checker();
