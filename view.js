@@ -93,6 +93,7 @@ var redrawAfterSelection = function() {
 	fwurg.system.view.drawSystem();
 	displayResources();
 	showFeaturesSelected();
+	displayConstraintViolations();
 }
 
 /** 
@@ -274,6 +275,18 @@ var displayResources = function() {
 	}
 	var res = system.resources(useRes);
 	$("#resources").empty().append(JSON.stringify(res));
+}
+
+var displayConstraintViolations = function() {
+	var violations = fwurg.system.systemmodel.check(fwurg.system.checker.getChecks());
+	console.log(violations);
+	
+	$("#violations").empty();
+	
+	for (var x in violations) {
+		$("#violations").append(violations[x].message+"<br/>");
+	}
+	
 }
 
 })(fwurg);

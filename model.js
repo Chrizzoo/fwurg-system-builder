@@ -122,6 +122,7 @@ var featurify = function(type) {
 			return this;
 		}
 	}
+
 	/**
 	 * Returns all features with the given class on this object.
 	 */
@@ -135,6 +136,15 @@ var featurify = function(type) {
 			}
 			return r;
 	}
+	
+	/** 
+	  * Returns true if the object contains at least one feature with the given class.
+	  */
+	type.prototype.containsFeaturesByClass = function(classname) {
+		var f = this.featuresByClass(classname);
+		return f.length > 0;
+	}
+	
 	/**
 	 * Removes all the features with the given class.
 	 */
@@ -197,15 +207,22 @@ Orbital.prototype.resources = function(r) {
 	return r;
 }
 
-/**
- * The orbit itself.
- */
+Orbital.prototype.check = function(checks) {
+	var res = [];
+	// do the orbital checks
+	for (var x in checks['orbital']) {
+		res = res.concat(checks['orbital'][x](this));	
+	}
+	return res;
+}
+
 var orbitalIdCounter = 0;
 var orbitalId = function() {
 	return orbitalIdCounter++;
 }
 
 /* 
+ * The orbit itself.
  * @param system, the system that this orbit is part of.
  */
 var Orbit = function(system) {
@@ -258,6 +275,21 @@ Orbit.prototype.resources = function(r) {
 	return r;
 }
 
+Orbit.prototype.check = function (checks) {
+	var res = [];
+	
+	// do the orbit checks
+	for (var x in checks['orbit']) {
+		res = res.concat(checks['orbit'][x](this));	
+	}
+	// let the orbitals check themselves.
+	for(var k in this._orbitals) {
+		res = res.concat(this._orbitals[k].check(checks));
+	}
+	return res;
+}
+
+
 var System = function() {
 	this._name = "";
 	this._orbits = [];
@@ -308,6 +340,20 @@ System.prototype.resources = function(r) {
 	this.cost(r);
 	this.benefit(r);
 	return r;
+}
+
+System.prototype.check = function (checks) {
+	var res = [];
+	
+	// do the system checks
+	for (var x in checks['system']) {
+		res = res.concat(checks['system'][x](this));	
+	}
+	// let the orbits check themselves.
+	for(var k in this._orbits) {
+		res = res.concat(this._orbits[k].check(checks));
+	}
+	return res;
 }
 
 fwurg.system = {
