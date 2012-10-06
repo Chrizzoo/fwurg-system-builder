@@ -63,25 +63,33 @@ var drawFeatures = function(features, objectdiv) {
 	for (x in features) {
 		var f = features[x];
 		
-		if (f.isA("orbit_type")) {
-			objectdiv.addClass(""+f.id().split(":")[1]);
+		if (f.isA("star_class")) {
+			objectdiv.append($("<img src='"+fwurg.system.view.imgRoot+f._data.image+"?w=50' title='"+f._data.name+"'/>"));
 		}
-		else if (f.isA("star_class") || f.isA("planet_type") || f.isA("moon_type")) {
-			objectdiv.append($("<img src='"+fwurg.system.view.imgRoot+f._data.image+"?w=50' title='"+f._data.name+"'/>"))
-			
+		else if(f.isA("atmosphere")) {
+			objectdiv.addClass("atmosphere");
 		}
 		else {
-			/*
-			handle features like planet atmosphere animations?
-			
-			// if it has no name use id.
-			if (typeof f._data.name == 'undefined') {
-				objectdiv.append(f.id()+" ");
-			}			
-			else {
-				objectdiv.append(f._data.name+" ");
-			}
-			*/
+			objectdiv.addClass(""+f.id().split(":")[1]);
+			//~ if (f.isA("orbit_type")) {
+				//~ objectdiv.addClass(""+f.id().split(":")[1]);
+			//~ }
+			//~ else if (f.isA("star_class") || f.isA("planet_type") || f.isA("moon_type")) {
+				//~ objectdiv.append($("<img src='"+fwurg.system.view.imgRoot+f._data.image+"?w=50' title='"+f._data.name+"'/>"))
+				
+			//~ }
+			//~ else {
+				//~ /*
+				//~ handle features like planet atmosphere animations?
+				
+				//~ // if it has no name use id.
+				//~ if (typeof f._data.name == 'undefined') {
+					//~ objectdiv.append(f.id()+" ");
+				//~ }			
+				//~ else {
+					//~ objectdiv.append(f._data.name+" ");
+				//~ }
+				//~ */
 		}
 	}
 }

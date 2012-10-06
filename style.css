@@ -9,7 +9,7 @@ body {
 }
 
 #overview {
-	background-color: grey; 
+	/*background-color: grey; */
 	width: 30%;
 	min-width: 220px;
 }
@@ -35,15 +35,15 @@ body {
 
 .orbit {
 	float: top;
-	height: 100px;
-	width: 200px;
-	border: 1px solid black;
+	height: 150px;
+	width: 400px;
+	border: 1px solid grey;
 }
 
 .orbital {
 	float: left;
-	width: 50px;
-	height: 50px;
+	width: 64px;
+	height: 64px;
 }
 
 .star_orbit {
@@ -52,15 +52,15 @@ body {
 }
 
 .hot_orbit {
-	background-color: red;
+	border: 2px solid red;
 }
 
 .goldilocks_orbit {
-	background-color: green;
+	border: 2px solid green;
 }
 
 .cold_orbit {
-	background-color: blue;
+	border: 2px solid blue;
 }
 
 .no_orbit {
