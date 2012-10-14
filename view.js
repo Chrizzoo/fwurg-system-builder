@@ -66,30 +66,15 @@ var drawFeatures = function(features, objectdiv) {
 		if (f.isA("star_class")) {
 			objectdiv.append($("<img src='"+fwurg.system.view.imgRoot+f._data.image+"?w=50' title='"+f._data.name+"'/>"));
 		}
-		else if(f.isA("atmosphere")) {
-			objectdiv.addClass("atmosphere");
-		}
 		else {
+			// add all feature classes as css classes.
+			var classes = f.classes();
+			for (x in classes) {
+				objectdiv.addClass(classes[x]);
+			}
+			
+			// add all the features (remove the rules: for convenience)
 			objectdiv.addClass(""+f.id().split(":")[1]);
-			//~ if (f.isA("orbit_type")) {
-				//~ objectdiv.addClass(""+f.id().split(":")[1]);
-			//~ }
-			//~ else if (f.isA("star_class") || f.isA("planet_type") || f.isA("moon_type")) {
-				//~ objectdiv.append($("<img src='"+fwurg.system.view.imgRoot+f._data.image+"?w=50' title='"+f._data.name+"'/>"))
-				
-			//~ }
-			//~ else {
-				//~ /*
-				//~ handle features like planet atmosphere animations?
-				
-				//~ // if it has no name use id.
-				//~ if (typeof f._data.name == 'undefined') {
-					//~ objectdiv.append(f.id()+" ");
-				//~ }			
-				//~ else {
-					//~ objectdiv.append(f._data.name+" ");
-				//~ }
-				//~ */
 		}
 	}
 }
@@ -97,12 +82,13 @@ var drawFeatures = function(features, objectdiv) {
 /** 
   * Redraw the system.
   */
-var redrawAfterSelection = function() {
+fwurg.system.view.redrawAfterSelection = function() {
 	fwurg.system.view.drawSystem();
 	displayResources();
 	showFeaturesSelected();
 	displayConstraintViolations();
 }
+
 
 /** 
   * Add an orbital to the orbitIndex. The orbital gets the orbitalfeature.
@@ -123,7 +109,7 @@ var starFunction = function(orbit, orbitIndex) {
 		// apply new star
 		fwurg.system.applyStar(starFeature, orbitIndex);
 		// redraw the system.
-		redrawAfterSelection();
+		fwurg.system.view.redrawAfterSelection();
 	});
 }
 
@@ -134,7 +120,7 @@ var orbitalFunction = function(orbit) {
 	addOptions(["planet_type", "moon_type"], function(orbitalFeature) {
 		// create a new orbital object.
 		createNewOrbital(orbit, orbitalFeature);
-		redrawAfterSelection();
+		fwurg.system.view.redrawAfterSelection();
 	});
 }
 
@@ -146,7 +132,7 @@ var featureFunction = function(object) {
 	addOptions(["biosphere", "climate"], function(feature) {
 		// apply the feature to the object.
 		object.addFeature(feature);
-		redrawAfterSelection();
+		fwurg.system.view.redrawAfterSelection();
 	});
 }
 
@@ -227,8 +213,7 @@ var handleFeatureDeletion = function(o, f) {
 		o.removeFeature(f.id());
 	}
 	
-	redrawAfterSelection();
-	
+	fwurg.system.view.redrawAfterSelection();
 }
 
 /**

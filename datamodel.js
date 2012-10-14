@@ -8,26 +8,32 @@ fwurg.system.startingResources = {
 		'bio mass': 200
 	};
 
-fwurg.system.init = function () {
-			
+fwurg.system.init = function (dump) {
 	// create a clean system.
 	var system = new fwurg.system.System();
 	
 	// assign to accessible variable.
 	fwurg.system.systemmodel = system;
 	
-	// star orbit + 10 orbits.
-	for(i = 0; i <= 10; i++) {
-		system.addOrbit(new fwurg.system.Orbit(system));
+	if(typeof dump == 'undefined') {	
+		// star orbit + 10 orbits.
+		for(i = 0; i <= 10; i++) {
+			system.addOrbit(new fwurg.system.Orbit(system));
+		}
+		
+		// get the orbits for editting.
+		var orbits = system.orbits();
+		
+		// assign star orbit.
+		orbits[0].addFeature("rules:star_orbit");
+		fwurg.system.view.drawSystem();
+		fwurg.system.displayDumpTools(); 
 	}
-	
-	// get the orbits for editting.
-	var orbits = system.orbits();
-	
-	orbits[0].addFeature("rules:star_orbit");
-
-	fwurg.system.view.drawSystem();
-	
+	else {
+		// load the orbits and features from the dump object.
+		system.load(dump);
+		fwurg.system.view.redrawAfterSelection();
+	}
 }
 
 /**
@@ -75,5 +81,46 @@ fwurg.system.applyStar = function(starFeature, starIndex) {
 
 	}
 }
+
+var dumpSystem = function() {
+	console.log("dump system");
+	var version = "1.0";
+	var root = {};
+	
+	root.builder_version = version;	
+	root.system_version = fwurg.system.system_version + 1;
+		
+	var res = fwurg.system.systemmodel.dump(root);
+	var text = JSON.stringify(res);
+	$("textarea#dump_area").val(text);
+
+}
+
+var loadSystem = function () {
+	var text = $("textarea#dump_area").val();
+	if (text != "") {
+		console.log("load system");
+		var obj = JSON.parse(text);
+		var system = obj.system;
+		console.log("Builder version: "+ obj.builder_version);
+		console.log("System version: "+ obj.system_version);
+		fwurg.system.system_version = obj.system_version;
+		fwurg.system.init(system);
+	}
+}
+
+fwurg.system.displayDumpTools = function() {
+	var sys = $("#dump_system");
+	sys.append('<textarea id="dump_area"></textarea>');
+	var dump = $('<button id="dump_button" type="button">Dump!</button>');
+	dump.click(dumpSystem);
+	sys.append(dump);
+	var load = $('<button id="load_button" type="button">Load!</button>');
+	load.click(loadSystem);
+	sys.append(load);
+}
+
+fwurg.system.system_version = 0;
+
 
 })(fwurg);

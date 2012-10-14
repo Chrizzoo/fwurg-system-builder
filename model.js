@@ -122,6 +122,16 @@ var featurify = function(type) {
 			return this;
 		}
 	}
+	
+	
+	/**
+	 * Returns a list of feature IDs.
+	 */
+	type.prototype.featureIDs = function() {
+		var r=[];
+		for(var f in this._features) r.push(f);
+		return r;
+	}
 
 	/**
 	 * Returns all features with the given class on this object.
@@ -216,6 +226,18 @@ Orbital.prototype.check = function(checks) {
 	return res;
 }
 
+Orbital.prototype.dump = function() {
+	var res = {};
+	res.name = this.name();
+	res.features = this.featureIDs();
+	return res;
+}
+
+Orbital.prototype.load = function(dump) {
+	this.features(dump.features);
+	return this;
+}
+
 var orbitalIdCounter = 0;
 var orbitalId = function() {
 	return orbitalIdCounter++;
@@ -289,6 +311,24 @@ Orbit.prototype.check = function (checks) {
 	return res;
 }
 
+Orbit.prototype.dump = function() {
+	var res = {};
+	res.features = this.featureIDs();
+	res.orbitals = [];
+	var orbitals = this.orbitals();
+	for (o in orbitals) {
+		res.orbitals.push(orbitals[o].dump());
+	}
+	return res;
+}
+
+Orbit.prototype.load = function(dump) {
+	this.features(dump.features);
+	for (o in dump.orbitals) {
+		this.addOrbital(new fwurg.system.Orbital(this).load(dump.orbitals[o]));
+	}
+	return this;
+}
 
 var System = function() {
 	this._name = "";
@@ -354,6 +394,27 @@ System.prototype.check = function (checks) {
 		res = res.concat(this._orbits[k].check(checks));
 	}
 	return res;
+}
+
+System.prototype.dump = function(dump) {
+	var system = {};
+	dump.system = system;
+	system.name = this._name;
+	system.features = this.featureIDs();
+	system.orbits = [];
+	var orbits = this.orbits();
+	for (o in orbits) {
+		system.orbits.push(orbits[o].dump());
+	}
+	return dump;
+}
+
+System.prototype.load = function(dump) {
+	this.name(dump.name);
+	this.features(dump.features);
+	for (o in dump.orbits) {
+		this.addOrbit(new fwurg.system.Orbit(this).load(dump.orbits[o]));
+	}
 }
 
 fwurg.system = {

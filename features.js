@@ -57,7 +57,7 @@
 	jovian_giant.data('_benefit', defaultBenefit);
 	
 	var ice_giant = new F("rules:ice_giant", ["gas_giant_type", "planet_type"]);
-	ice_giant.data('_cost', gasGiantCost(-1, -3));
+	ice_giant.data('_cost', gasGiantCost(-3, -1));
 	ice_giant.data('_benefit', defaultBenefit);
 	
 	// -- Atmospheres
