@@ -1,217 +1,71 @@
-@-moz-keyframes planetturn {  
-	from {  
-		background-position: 200%;
-	}  
-
-	to {  
-		background-position: 0%;
-	}  
+.orbit {
+	float: top;
+	height: 150px;
+	width: 400px;
+	border: 1px solid grey;
 }
 
-@-moz-keyframes planetretro {  
-	from {  
-		background-position: 0%;
-	}  
-
-	to {  
-		background-position: 200%;
-	}  
+.orbital {
+	float: left;
+	width: 64px;
+	height: 64px;
 }
 
-
-.small_moon {
-	width: 16px;
-    height: 16px;
-	margin-left:17px;
-	margin-top:32px;	
-    border-radius: 16px;
-	background-size:32px 16px !important;
-	-moz-animation-duration: 4s;  
-	-moz-animation-name: planetturn;  
-	-moz-animation-iteration-count: infinite;  
-	-moz-animation-timing-function: linear;
+.star_orbit {
+	background-color: black;
+	color: white;
 }
 
-.medium_moon {
-	width: 24px;
-    height: 24px;
-	margin-left:13px;
-	margin-top:28px;	
-    border-radius: 24px;
-	background-size:48px 24px !important;
-	-moz-animation-duration: 6s;  
-	-moz-animation-name: planetturn;  
-	-moz-animation-iteration-count: infinite;  
-	-moz-animation-timing-function: linear;
+.hot_orbit {
+	/* border: 2px solid red; */
+	
+	/* Fallback for web browsers that doesn't support RGBa */
+	background: rgb(255, 0, 0) transparent;
+	/* RGBa with 0.6 opacity */
+	background: rgba(255, 0, 0, 0.3);
+	/* For IE 5.5 - 7*/
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#66FF0000, endColorstr=#66FF0000);
+	/* For IE 8*/
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#66FF0000, endColorstr=#66FF0000)";
 }
 
-.large_moon {
-	width: 32px;
-    height: 32px;
-	margin-left:9px;
-	margin-top:24px;	
-    border-radius: 32px;
-	background-size:64px 32px !important;
-	-moz-animation-duration: 8s;  
-	-moz-animation-name: planetturn;  
-	-moz-animation-iteration-count: infinite;  
-	-moz-animation-timing-function: linear;
+.goldilocks_orbit {
+	/* border: 2px solid green; */
+	
+	/* Fallback for web browsers that doesn't support RGBa */
+	background: rgb(0, 255, 0) transparent;
+	/* RGBa with 0.6 opacity */
+	background: rgba(0, 255, 0, 0.3);
+	/* For IE 5.5 - 7*/
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#6600FF00, endColorstr=#6600FF00);
+	/* For IE 8*/
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#660FF000, endColorstr=#6600FF00)";
 }
 
-.small_planet {
-    width: 32px;
-    height: 32px;
-	margin-left:34px;
-	margin-top:34px;
-    border-radius: 32px;
-	background-size:64px 32px !important;
-	-moz-animation-duration: 8s;  
-	-moz-animation-name: planetturn;  
-	-moz-animation-iteration-count: infinite;  
-	-moz-animation-timing-function: linear;
+.cold_orbit {
+	border: 2px solid blue;
+	/* Fallback for web browsers that doesn't support RGBa */
+	background: rgb(0, 0, 255) transparent;
+	/* RGBa with 0.6 opacity */
+	background: rgba(0, 0, 255, 0.3);
+	/* For IE 5.5 - 7*/
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#660000FF, endColorstr=#660000FF);
+	/* For IE 8*/
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#660000FF, endColorstr=#660000FF0)";
 }
 
-.medium_planet {
-    width: 40px;
-    height: 40px;
-	margin-left:30px;
-	margin-top:30px;
-    border-radius: 40px;
-	background-size:80px 40px !important;
-	-moz-animation-duration: 12s;  
-	-moz-animation-name: planetturn;  
-	-moz-animation-iteration-count: infinite;  
-	-moz-animation-timing-function: linear;
+.no_orbit {
+	border: none;	
 }
 
-.large_planet {
-    width: 48px;
-    height: 48px;
-	margin-left:26px;
-	margin-top:26px;
-    border-radius: 48px;
-	background-size:96px 48px !important;
-	-moz-animation-duration: 15s;  
-	-moz-animation-name: planetturn;  
-	-moz-animation-iteration-count: infinite;  
-	-moz-animation-timing-function: linear;
+.large_planet_orbit {
+	height: 250px;
 }
-
-.hot_orbit .orbital {
-	background: url(images/cratersFlip.png), Khaki;
-}
-.hot_orbit .orbital.oceans {
-	background: url(images/oceanred.png), url(images/cratersFlip.png), Khaki;
-}
-.hot_orbit .orbital.atmosphere {
-	background: url(images/cratersFlip.png), Khaki;
-	box-shadow: 3px 0px 3px 0px rgba(0,0,0,0.9), 0 0 3px 3px #98957A;
-}
-.hot_orbit .orbital.atmosphere.oceans {
-	background: url(images/cloudsflipdark.png), url(images/oceanred.png), url(images/cratersFlip.png), Khaki;
-	box-shadow: 3px 0px 3px 0px rgba(0,0,0,0.9), 0 0 3px 3px DimGray;
-}
-
-.goldilocks_orbit .orbital {
-	background: -moz-linear-gradient(top, white, rgba(127,127,127,0), rgba(127,127,127,0), rgba(127,127,127,0), white), url(images/cratersFlip.png), Chocolate;
-}
-.goldilocks_orbit .orbital.oceans {
-	background: -moz-linear-gradient(top, white, rgba(127,127,127,0), rgba(127,127,127,0), rgba(127,127,127,0), white), url(images/ocean.png), url(images/cratersFlip.png), Chocolate;
-}
-.goldilocks_orbit .orbital.atmosphere {
-	background: url(images/cloudsflip.png), -moz-linear-gradient(top, white, rgba(127,127,127,0), rgba(127,127,127,0), rgba(127,127,127,0), white), url(images/cratersFlip.png), Chocolate;
-	box-shadow: 3px 0px 3px 0px rgba(0,0,0,0.9), 0 0 3px 3px #9B7459;
-}
-.goldilocks_orbit .orbital.atmosphere.oceans  {
-	background: url(images/cloudsflip.png), -moz-linear-gradient(top, white, rgba(127,127,127,0), rgba(127,127,127,0), rgba(127,127,127,0), white), url(images/ocean.png), url(images/cratersFlip.png), Chocolate;
-	box-shadow: 3px 0px 3px 0px rgba(0,0,0,0.9), 0 0 3px 3px DodgerBlue;
-}
-.goldilocks_orbit .orbital.natural_life.oceans {
-	background: -moz-linear-gradient(top, white, rgba(127,127,127,0), rgba(127,127,127,0), rgba(127,127,127,0), white), url(images/Continents.png), url(images/ocean.png);
-}
-.goldilocks_orbit .orbital.atmosphere.natural_life {
-	background: url(images/cloudsflip.png), -moz-linear-gradient(top, white, rgba(127,127,127,0), rgba(127,127,127,0), rgba(127,127,127,0), white), url(images/cratersFlip.png), green;
-	box-shadow: 3px 0px 3px 0px rgba(0,0,0,0.9), 0 0 3px 3px Green;
-}
-.goldilocks_orbit .orbital.atmosphere.natural_life.oceans {
-	background: url(images/cloudsflip.png), -moz-linear-gradient(top, white, rgba(127,127,127,0), rgba(127,127,127,0), rgba(127,127,127,0), white), url(images/Continents.png), url(images/ocean.png);
-	box-shadow: 3px 0px 3px 0px rgba(0,0,0,0.9), 0 0 3px 3px DodgerBlue;
-}
-
-.cold_orbit .orbital {
-	background: url(images/cratersFlip.png), white;
-}
-.cold_orbit .orbital.oceans {
-	background: url(images/oceanblack.png), url(images/cratersFlip.png), white;
-}
-.cold_orbit .orbital.atmosphere {
-	background: url(images/cloudsflip.png), url(images/cratersFlip.png), white;
-	box-shadow: 3px 0px 3px 0px rgba(0,0,0,0.9), 0 0 3px 3px Gray;
-}
-.cold_orbit .orbital.atmosphere.oceans {
-	background: url(images/cloudsflip.png), url(images/oceanblack.png), url(images/cratersFlip.png), white;
-	box-shadow: 3px 0px 3px 0px rgba(0,0,0,0.9), 0 0 3px 3px DimGray;
-}
-
-.asteroid_belt {
-	width:100px;
-	height:55px;
-	margin-top:20px;
-	background-size: 100px 100px !important;
-	background-image:url(images/Asteroids.png) !important;
-}
-
-.rings {
-	width: 50px;
+	
+.empty_orbit {
 	height: 50px;
-	margin-top:15px;
-	background-size: 50px 50px !important;
-	background-image:url(images/Rings.png) !important;
-
 }
 
-.jovian_giant {
-    width: 64px;
-    height: 64px;
-	margin-left:18px;
-	margin-top:18px;
-    border-radius: 32px;
-	background-size:128px 64px !important;
-	
-	-moz-animation-duration: 10s;  
-	-moz-animation-name: planetturn;  
-	-moz-animation-iteration-count: infinite;  
-	-moz-animation-timing-function: linear;
-	background: url(images/cloudsflipred.png), -moz-linear-gradient(top, PeachPuff, tan, PeachPuff, SandyBrown, tan, PeachPuff ) !important;
-}
-
-.ice_giant {
-    width: 56px;
-    height: 56px;
-	margin-left:22px;
-	margin-top:22px;
-    border-radius: 28px;
-	background-size:112px 56px !important;
-	
-	-moz-animation-duration: 12s;  
-	-moz-animation-name: planetturn;  
-	-moz-animation-iteration-count: infinite;  
-	-moz-animation-timing-function: linear;
-	background: url(images/cloudsfliplight.png),-moz-linear-gradient(top, rgb(23,19,208), rgb(27,69,222), rgb(68,89,221), rgb(68,89,221), rgb(50,70,200), rgb(51,63,214), rgb(9,47,221)  ) !important;
-
-}
-
-.brown_dwarf {
-	width:70px;
-	height:70px;
-	margin-left:15px;
-	margin-top:15px;
-	border-radius:35px;
-	background-size:140px 70px !important;
-	
-	-moz-animation-duration: 10s;  
-	-moz-animation-name: planetturn;  
-	-moz-animation-iteration-count: infinite;  
-	-moz-animation-timing-function: linear;
-	background: url(images/cloudsflip.png), -moz-linear-gradient(top, firebrick, gold, orange, darkred, gold, orange ) !important;
+.selected {
+	border: 1px solid white;
 }

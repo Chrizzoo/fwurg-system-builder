@@ -20,6 +20,60 @@ var getOrbitals = function(orbit, featureclass) {
 	return result;
 }
 
+/** ===== System Constraints ===== **/
+
+var largePlanetConstraint = function(system) {
+	var result = [];
+	var orbits = system.orbits();
+	
+	// variables to keep track of the large planet found.
+	var currentLargePlanet = null;
+	var currentOrbit = 0;
+	var currentOrbitType = null;
+	
+	for (x in orbits) {
+		
+		var orbit = orbits[x];
+		var orbitType = orbit.featuresByClass("orbit_type")[0];
+		var orbitals =  orbit.orbitals();
+		
+		// perform check that states that the orbit after the large planet orbit must be empty. 
+		if (currentLargePlanet != null && x == currentOrbit +1 && orbitals.length > 0) {
+			var aboutObjects = [];
+			aboutObjects.push(orbits[currentOrbit]);
+			aboutObjects.push(currentLargePlanet);
+			aboutObjects.push(orbits[x]);
+			result.push(violation(aboutObjects, 'A large planet consumes two orbits. (the next orbit must be empty)'));
+		}
+		
+		// perform check that states that the orbit after the large planet orbit must be of the same orbit type 
+		if (currentLargePlanet != null && x == currentOrbit +1 && orbitType != currentOrbitType) {
+			var aboutObjects = [];
+			aboutObjects.push(orbits[currentOrbit]);
+			aboutObjects.push(currentLargePlanet);
+			aboutObjects.push(orbits[x]);
+			result.push(violation(aboutObjects, 'A large planet consumes two orbits that must be of the same orbit type. (the next orbit must be of the same type)'));
+		}
+		
+		/* reset the values */
+		currentLargePlanet = null;
+		currentOrbit = 0;
+		currentOrbitType = null;
+		
+				
+		for (var y in orbitals) {
+			var orbital = orbitals[y];
+			// Found a new large planet 
+			if (orbital.hasFeature("rules:large_planet")) {
+				currentLargePlanet = orbital;
+				currentOrbit = parseInt(x);
+				currentOrbitType = orbitType; 
+			}
+		}
+	}
+	return result;
+}
+
 /** ===== Orbit Constraints ===== **/
 
 var singlePlanetConstraint = function(orbit) {
@@ -119,11 +173,11 @@ var climateCountConstraint = function(orbital) {
 }
 
 
-
-
 // create the Checker instance that contains the lists with checks
 fwurg.system.checker = new fwurg.system.constraints.Checker();
 var checker = fwurg.system.checker;
+
+checker.addCheck('system', largePlanetConstraint);
 
 checker.addCheck('orbit', singlePlanetConstraint);
 checker.addCheck('orbit', lunarOrbitsConstraint);

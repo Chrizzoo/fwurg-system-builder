@@ -26,7 +26,10 @@ fwurg.system.view.drawSystem = function() {
 		drawOrbit(orbits[x], o);
 	}
 	
-	
+	/* visual hax for large planet */
+	$('div.orbit:has(div.large_planet)').addClass('large_planet_orbit');
+	$('div.orbit:has(div.large_planet)').next().addClass('empty_orbit');
+
 }
 
 
@@ -103,7 +106,7 @@ var createNewOrbital = function (orbit, orbitalFeature) {
  * helper function that provides the star options and supplies the onclick handler.
  */
 var starFunction = function(orbit, orbitIndex) {
-	addOptions(["star_class"], function(starFeature) {
+	addOptions({"star_class": "Stars"}, function(starFeature) {
 		// remove old star.
 		orbit.removeFeaturesByClass("star_class");
 		// apply new star
@@ -117,7 +120,7 @@ var starFunction = function(orbit, orbitIndex) {
  * helper function that provides the orbital options and supplies the onclick handler.
  */
 var orbitalFunction = function(orbit) {
-	addOptions(["planet_type", "moon_type"], function(orbitalFeature) {
+	addOptions({"planet_type": "Planets", "moon_type": "Moons"}, function(orbitalFeature) {
 		// create a new orbital object.
 		createNewOrbital(orbit, orbitalFeature);
 		fwurg.system.view.redrawAfterSelection();
@@ -129,7 +132,7 @@ var orbitalFunction = function(orbit) {
  */
 var featureFunction = function(object) {
 	showFeaturesSelected();
-	addOptions(["biosphere", "climate"], function(feature) {
+	addOptions({"biosphere": "Biospheres", "climate": "Climates"}, function(feature) {
 		// apply the feature to the object.
 		object.addFeature(feature);
 		fwurg.system.view.redrawAfterSelection();
@@ -144,9 +147,12 @@ var featureFunction = function(object) {
 var addOptions= function(classes, clickFunction) {
 	var options = $('#options');
 	for(x in classes) {
-		var opts = fwurg.system.Feature.getByClass(classes[x]);
+		var opts = fwurg.system.Feature.getByClass(x);
+		var header = $("<div class='feature_group_name'>"+classes[x]+"</div>");
+		header.appendTo(options);
 		for (y in opts) {
 			var feature = opts[y];
+
 			var control = $("<div id='"+feature.id()+"' class='feature'><div class='feature_name'>"+feature._data.name+"</div><div class='feature_image'><img src='"+fwurg.system.view.imgRoot+feature._data.image+"?w=100' /></div></div>");
 			control.data('feature', feature);
 			control.appendTo(options);
