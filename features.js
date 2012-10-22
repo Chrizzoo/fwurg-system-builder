@@ -177,6 +177,11 @@
 		qb.where('?s is a: climate')
 	)};
 	
+	queries.specials = {endpoint: wiki.endpoint('resources'), query: qb.query(
+		qb.fields('?s'),
+		qb.where('?s is a: special_option')
+	)};
+	
 	// start loading all the features from the wiki.
 	wiki.queries(queries).then(function(data) {		
 		
@@ -274,9 +279,26 @@
 			console.log(data.climates);
 		}
 		
+		// run over the specials
+		if(data.specials.status == 'ok') {
+			for(var k in data.specials.body) {
+				var properties = data.specials.body[k];
+				// create feature.
+				
+				// add the category for the builder as a class.
+				properties['is a'].push(properties['Builder'][0]);
+				
+				var feature = createFeature(k, properties);
+				feature.data('cost', {
+					'special points': parseInt(properties['Cost'][0])
+				});
+				feature.data('applies_to', properties['Applies To'][0]);
+			}
+		} else {
+			console.log(data.specials);
+		}
 		console.log("loaded features from wiki.");
 		fwurg.system.init();
-	
 	});
 	
 })(fwurg, jQuery);

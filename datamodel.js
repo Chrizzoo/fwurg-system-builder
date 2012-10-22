@@ -5,7 +5,8 @@ fwurg.system.systemmodel = {};
 fwurg.system.startingResources = {
 		'gas mass': 50,
 		'rock mass': 100,
-		'bio mass': 200
+		'bio mass': 200,
+		'special points': 5
 	};
 
 fwurg.system.init = function (dump) {

@@ -1,3 +1,10 @@
+.system {
+	float: top;
+	height: 100px;
+	width: 400px;
+	border: 1px solid grey;
+}
+
 .orbit {
 	float: top;
 	height: 150px;

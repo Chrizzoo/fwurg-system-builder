@@ -14,6 +14,10 @@ fwurg.system.view.drawSystem = function() {
 	// add the system element.
 	var s = $("<div id='system'>").appendTo($('#overview').empty());
 	
+	// make your_system clickable (for systemwide features and later the name)
+	var o = $("<div id='your_system' class='system'>Your system name!</div>").appendTo(s);
+	o.click(selectSystemObject("your_system"));
+	
 	//reset the orbital counter.
 	orbital_count = 0;
 	
@@ -29,7 +33,6 @@ fwurg.system.view.drawSystem = function() {
 	/* visual hax for large planet */
 	$('div.orbit:has(div.large_planet)').addClass('large_planet_orbit');
 	$('div.orbit:has(div.large_planet)').next().addClass('empty_orbit');
-
 }
 
 
@@ -103,9 +106,21 @@ var createNewOrbital = function (orbit, orbitalFeature) {
 }
 
 /*
+ * helper function that provides the system feature options and supplies the onclick handler.
+ */
+var systemFeaturesFunction = function(system) {
+	addOptions({"system": "Specials"}, function(feature) {
+		// apply the feature to the object.
+		system.addFeature(feature);
+		fwurg.system.view.redrawAfterSelection();
+	});
+	
+}
+
+/*
  * helper function that provides the star options and supplies the onclick handler.
  */
-var starFunction = function(orbit, orbitIndex) {
+var starFeaturesFunction = function(orbit, orbitIndex) {
 	addOptions({"star_class": "Stars"}, function(starFeature) {
 		// remove old star.
 		orbit.removeFeaturesByClass("star_class");
@@ -119,10 +134,15 @@ var starFunction = function(orbit, orbitIndex) {
 /*
  * helper function that provides the orbital options and supplies the onclick handler.
  */
-var orbitalFunction = function(orbit) {
+var orbitFeaturesFunction = function(orbit) {
 	addOptions({"planet_type": "Planets", "moon_type": "Moons"}, function(orbitalFeature) {
 		// create a new orbital object.
 		createNewOrbital(orbit, orbitalFeature);
+		fwurg.system.view.redrawAfterSelection();
+	});
+	addOptions({"orbit": "Specials"}, function(feature) {
+		// apply the feature to the object.
+		orbit.addFeature(feature);
 		fwurg.system.view.redrawAfterSelection();
 	});
 }
@@ -130,9 +150,9 @@ var orbitalFunction = function(orbit) {
 /*
  * helper function that provides the feature options and supplies the onclick handler.
  */
-var featureFunction = function(object) {
+var orbitalFeaturesFunction = function(object) {
 	showFeaturesSelected();
-	addOptions({"biosphere": "Biospheres", "climate": "Climates"}, function(feature) {
+	addOptions({"biosphere": "Biospheres", "climate": "Climates", "orbital": "Specials"}, function(feature) {
 		// apply the feature to the object.
 		object.addFeature(feature);
 		fwurg.system.view.redrawAfterSelection();
@@ -152,8 +172,11 @@ var addOptions= function(classes, clickFunction) {
 		header.appendTo(options);
 		for (y in opts) {
 			var feature = opts[y];
-
-			var control = $("<div id='"+feature.id()+"' class='feature'><div class='feature_name'>"+feature._data.name+"</div><div class='feature_image'><img src='"+fwurg.system.view.imgRoot+feature._data.image+"?w=100' /></div></div>");
+			var description = "";
+			if (typeof feature.data('description') != 'undefined') {
+				description = feature.data('description');
+			}
+			var control = $("<div id='"+feature.id()+"' class='feature' title='"+description+"'><div class='feature_name'>"+feature._data.name+"</div><div class='feature_image'><img src='"+fwurg.system.view.imgRoot+feature._data.image+"?w=100' /></div></div>");
 			control.data('feature', feature);
 			control.appendTo(options);
 			
@@ -227,8 +250,10 @@ var handleFeatureDeletion = function(o, f) {
  */
 var selectSystemObject = function (objectId) {
 	return function (e) {
+		$("#your_system").removeClass("selected");
 		$(".orbit").removeClass("selected");
 		$(".orbital").removeClass("selected");
+		
 		$("#"+objectId).addClass("selected");
 		
 		// make sure a planet selection does not become an orbit selection.
@@ -237,22 +262,28 @@ var selectSystemObject = function (objectId) {
 		// empty the options if a new object is selected.
 		$('#options').empty();
 		
+		if ($(this).hasClass('system')) {
+			// set the currently selected object.
+			var system = fwurg.system.systemmodel;
+			$('#selected_object').data('object', system);
+			systemFeaturesFunction(system);
+		}		
 		if ($(this).hasClass('orbit')) {
 			var orbitIndex = $(this).attr('id').split("_")[1];
 			var orbit = $(this).data('orbit');
 			// set the currently selected object.
 			$('#selected_object').data('object', orbit);
 			if (orbit.hasFeature("rules:star_orbit")) {
-				starFunction(orbit, orbitIndex);
+				starFeaturesFunction(orbit, orbitIndex);
 			} else  {
-				orbitalFunction(orbit);
+				orbitFeaturesFunction(orbit);
 			}				
 		}
 		else if ($(this).hasClass('orbital')) {
 			var orbital = $(this).data('orbital');
 			// set the currently selected object.
 			$('#selected_object').data('object', orbital);
-			featureFunction(orbital);
+			orbitalFeaturesFunction(orbital);
 		}
 		// display the features on the newly selected object.
 		showFeaturesSelected();
