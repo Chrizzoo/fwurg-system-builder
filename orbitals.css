@@ -222,13 +222,24 @@
 
 }
 
+.trinary_system .brown_dwarf {
+    width: 56px;
+    height: 56px;
+	margin-left:22px;
+	margin-top:22px;
+    border-radius: 28px;
+	background-size:112px 56px;
+	
+	background: url(images/orange_sun.png) !important;	
+}
+
 .brown_dwarf {
 	width:70px;
 	height:70px;
 	margin-left:15px;
 	margin-top:15px;
 	border-radius:35px;
-	background-size:140px 70px !important;
+	background-size:140px 70px;
 	
 	-moz-animation-duration: 10s;  
 	-moz-animation-name: planetturn;  
@@ -236,3 +247,4 @@
 	-moz-animation-timing-function: linear;
 	background: url(images/cloudsflip.png), -moz-linear-gradient(top, firebrick, gold, orange, darkred, gold, orange ) !important;
 }
+

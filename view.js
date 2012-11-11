@@ -13,9 +13,13 @@ fwurg.system.view.drawSystem = function() {
 	
 	// add the system element.
 	var s = $("<div id='system'>").appendTo($('#overview').empty());
-	
 	// make your_system clickable (for systemwide features and later the name)
-	var o = $("<div id='your_system' class='system'>Your system name!</div>").appendTo(s);
+	var nameval = "Your system name!";
+	if (system.name() != '') {
+		nameval = system.name();
+	}
+		
+	var o = $("<div id='your_system' class='system'>"+nameval+"</div>").appendTo(s);
 	o.click(selectSystemObject("your_system"));
 	
 	//reset the orbital counter.
@@ -27,6 +31,10 @@ fwurg.system.view.drawSystem = function() {
 		o.click(selectSystemObject("orbit_"+x));
 		o.data('orbit', orbits[x]);
 		//console.log("draw orbit "+x);
+		
+		if (x == 0) {
+			o.text("Select your star!");
+		}
 		drawOrbit(orbits[x], o);
 	}
 	
@@ -45,7 +53,7 @@ var drawOrbit = function(orbit, orbitdiv) {
 	drawFeatures(fs, orbitdiv);
 	var orbitals = orbit.orbitals();
 	for (x in orbitals) {
-		var orb = $("<div id='orbital_"+orbital_count+"' class='orbital' >").appendTo(orbitdiv);
+		var orb = $("<div id='orbital_"+orbital_count+"' class='orbital' title='"+orbitals[x].name()+"'>").appendTo(orbitdiv);
 		orb.click(selectSystemObject("orbital_"+orbital_count));
 		orb.data('orbital', orbitals[x]);
 		//console.log("draw orbital "+x);
@@ -70,7 +78,7 @@ var drawFeatures = function(features, objectdiv) {
 		var f = features[x];
 		
 		if (f.isA("star_class")) {
-			objectdiv.append($("<img src='"+fwurg.system.view.imgRoot+f._data.image+"?w=50' title='"+f._data.name+"'/>"));
+			objectdiv.empty().append($("<img src='"+fwurg.system.view.imgRoot+f._data.image+"?w=75' title='"+f._data.name+"'/>"));
 		}
 		else {
 			// add all feature classes as css classes.
@@ -141,6 +149,8 @@ var orbitFeaturesFunction = function(orbit) {
 		fwurg.system.view.redrawAfterSelection();
 	});
 	addOptions({"orbit": "Specials"}, function(feature) {
+		// handle special cases.
+		handleSpecialFeatureAddition(orbit, feature);
 		// apply the feature to the object.
 		orbit.addFeature(feature);
 		fwurg.system.view.redrawAfterSelection();
@@ -153,10 +163,26 @@ var orbitFeaturesFunction = function(orbit) {
 var orbitalFeaturesFunction = function(object) {
 	showFeaturesSelected();
 	addOptions({"biosphere": "Biospheres", "climate": "Climates", "orbital": "Specials"}, function(feature) {
+		// handle special cases.
+		handleSpecialFeatureAddition(object, feature);
 		// apply the feature to the object.
 		object.addFeature(feature);
 		fwurg.system.view.redrawAfterSelection();
 	});
+}
+
+var addNameInput = function(object) {
+	var options = $('#options');
+	var header = $("<div class='input_name'>Name: <input id='current_object_name' type='text' value='"+object.name()+"'></div>");
+	
+	var button = $("<input type='button' id='update_object_name' value='Update name'>");
+	button.click(function() {
+		var val = $('#current_object_name').val();
+		object.name(val);
+		fwurg.system.view.redrawAfterSelection();
+	});
+	button.appendTo(header);
+	header.appendTo(options);
 }
 
 /** 
@@ -222,7 +248,50 @@ var showFeaturesSelected = function() {
 }
 
 /**
+  * Function that is called when a feature addition is requested.
+  * This function handles special cases.
+  * @param o, the object that the features belong to.
+  * @param f, the feature that is to be deleted.
+  */
+var handleSpecialFeatureAddition = function (o, f) {
+	if (f == "rules:active_sun" && (! o.hasFeature("rules:active_sun"))) {
+		//upgrade the orbit.
+		if (o.hasFeature("rules:cold_orbit")) {
+			o.removeFeature("rules:cold_orbit");
+			o.addFeature("rules:goldilocks_orbit");
+		}
+		else if (o.hasFeature("rules:goldilocks_orbit")) {
+			o.removeFeature("rules:goldilocks_orbit");
+			o.addFeature("rules:hot_orbit");
+		}
+	}
+}
+
+/**
+  * Function that is called when a feature addition is requested.
+  * This function handles special cases.
+  * @param o, the object that the features belong to.
+  * @param f, the feature that is to be deleted.
+  */
+var handleSpecialFeatureDeletion = function (o, f) {
+	if (f == "rules:active_sun" && (o.hasFeature("rules:active_sun"))) {
+		//downgrade the orbit.
+		if (o.hasFeature("rules:hot_orbit")) {
+			o.removeFeature("rules:hot_orbit");
+			o.addFeature("rules:goldilocks_orbit");
+		}
+		else if (o.hasFeature("rules:goldilocks_orbit")) {
+			o.removeFeature("rules:goldilocks_orbit");
+			o.addFeature("rules:cold_orbit");
+		}
+	}
+}
+
+
+
+/**
   * Function that is called when a feature deletion is requested.
+  * This function handles special cases.
   * @param o, the object that the features belong to.
   * @param f, the feature that is to be deleted.
   */
@@ -238,8 +307,11 @@ var handleFeatureDeletion = function(o, f) {
 		
 	}
 	else {
+		// handle special cases.
+		handleSpecialFeatureDeletion(o,f);
 		// remove the specific feature.
 		o.removeFeature(f.id());
+		
 	}
 	
 	fwurg.system.view.redrawAfterSelection();
@@ -266,7 +338,9 @@ var selectSystemObject = function (objectId) {
 			// set the currently selected object.
 			var system = fwurg.system.systemmodel;
 			$('#selected_object').data('object', system);
+			addNameInput(system);
 			systemFeaturesFunction(system);
+			
 		}		
 		if ($(this).hasClass('orbit')) {
 			var orbitIndex = $(this).attr('id').split("_")[1];
@@ -283,6 +357,7 @@ var selectSystemObject = function (objectId) {
 			var orbital = $(this).data('orbital');
 			// set the currently selected object.
 			$('#selected_object').data('object', orbital);
+			addNameInput(orbital);
 			orbitalFeaturesFunction(orbital);
 		}
 		// display the features on the newly selected object.

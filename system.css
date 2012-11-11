@@ -23,6 +23,32 @@
 	color: white;
 }
 
+.hot_orbit.active_sun {
+	/* Fallback for web browsers that doesn't support RGBa */
+	background: rgb(255, 100, 0) transparent;
+	/* RGBa with 0.6 opacity */
+	background: rgba(255, 100, 0, 0.3);
+	/* For IE 5.5 - 7*/
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#66FF0000, endColorstr=#66FF0000);
+	/* For IE 8*/
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#66FF0000, endColorstr=#66FF0000)";
+	
+}
+
+.goldilocks_orbit.active_sun {
+	/* border: 2px solid green; */
+	
+	/* Fallback for web browsers that doesn't support RGBa */
+	background: rgb(0, 255, 100) transparent;
+	/* RGBa with 0.6 opacity */
+	background: rgba(0, 255, 100, 0.3);
+	/* For IE 5.5 - 7*/
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#6600FF00, endColorstr=#6600FF00);
+	/* For IE 8*/
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#660FF000, endColorstr=#6600FF00)";
+}
+
+
 .hot_orbit {
 	/* border: 2px solid red; */
 	

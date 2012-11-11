@@ -102,7 +102,7 @@
 	var natural_life = new F("rules:natural_life", ["biosphere"])
 	.data('_cost', biosphereCost(1))
 	.data('_benefit', defaultBenefit)
-	.data('image', "")
+	.data('image', "rules:natural_life.png")
 	.data('name', "Natural Life");
 	
 	var oceans = new F("rules:oceans", ["biosphere"])
@@ -111,6 +111,18 @@
 	.data('image', "rules:water_ocean.png")
 	.data('name', "Oceans");
 
+	// -- Specials
+	
+	var captured_moon = new F("rules:captured_moon", ["special_option", "orbit"])
+	.data('benefit', {'rock mass' : 2, 'lunar orbits': 2})
+	.data('_cost', defaultCost)
+	.data('_benefit', defaultBenefit);
+	
+	var trinary_system = new F("rules:trinary_system", ["special_option", "orbit"])
+	.data('benefit', {'zones' : -3, 'lunar orbits': 4})
+	.data('_cost', defaultCost)
+	.data('_benefit', defaultBenefit);
+	
 	// automatically create the rest of the features with wiki data.
 	
 	/**
@@ -121,7 +133,6 @@
 	var createFeature = function(id, map, noDescription) {
 		try {
 			var f = null;
-
 			// if the Feature already exists use it
 			if (F.exists(id)) {
 				f = F.get(id);
@@ -130,21 +141,21 @@
 				// set default resources method
 				f.data('_cost', defaultCost);
 				f.data('_benefit', defaultBenefit);
-				
-				f.data('name', map['entry title'][0]);
-				f.data('image', map['Image'][0]);
-				if (typeof noDescription == 'undefined') {
-					f.data('description', map['Description'][0]);
-				}
 			}
-		// return created/fetched feature
-		return f;
+			
+			f.data('name', map['entry title'][0]);
+			f.data('image', map['Image'][0]);
+			if (typeof noDescription == 'undefined') {
+					f.data('description', map['Description'][0]);
+			}
+			// return created/fetched feature
+			return f;
 		} catch(e) {
 			console.log('Failed for ',id); 
 		}
 	}
 	
-
+	
 	// set up wiki
 	var wiki = new fwurg.Wiki('http://fwurg.xs4all.nl/dokuwiki/_export/strataendpoint/', 'tech:relations_endpoint', 'tech:resources_endpoint');
 
