@@ -218,8 +218,21 @@ var addOptions= function(classes, clickFunction) {
   * show the features on the currently selected object.
   */
 var showFeaturesSelected = function() {
+	// get the object.
 	var object = $('#selected_object').data('object');
-	var selected_object = $('#selected_object').empty();
+	
+	// display the header title with the object name.
+	var displayName = "";
+	if (typeof object.name != 'undefined') {
+		displayName = object.name();
+	}
+	else {
+		if (typeof $('.selected').attr('id') != 'undefined') {
+			displayName = $('.selected').attr('id').replace("_", " ");
+		}
+	}
+	var selected_object = $('#selected_object').empty().append("<h2>Selected Object: "+displayName+"</h2>");
+	
 	if (typeof object != 'undefined') {
 		var features = object.features();
 		for (x in features) {
@@ -379,14 +392,20 @@ var displayResources = function() {
 		useRes[k] = startingResources[k];
 	}
 	var res = system.resources(useRes);
-	$("#resources").empty().append(JSON.stringify(res));
+
+	//$("#resources").empty().append(JSON.stringify(res));
+	$("#resources").empty().append("<h2>Resources</h2>");
+	
+	for (x in res) {
+		$("#resources").append("<div>"+fwurg.icons.draw(x.replace(" ", "-"))+" "+x+ ": "+res[x]+"</div>");
+	}
 }
 
 var displayConstraintViolations = function() {
 	var violations = fwurg.system.systemmodel.check(fwurg.system.checker.getChecks());
 	console.log(violations);
 	
-	$("#violations").empty();
+	$("#violations").empty().append("<h2>Violations</h2>");
 	
 	for (var x in violations) {
 		$("#violations").append(violations[x].message+"<br/>");

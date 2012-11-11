@@ -111,8 +111,8 @@ var loadSystem = function () {
 }
 
 fwurg.system.displayDumpTools = function() {
-	var sys = $("#dump_system");
-	sys.append('<textarea id="dump_area"></textarea>');
+	var sys = $("#dump_system").append("<h2>System Dump</h2>");
+	sys.append('<textarea id="dump_area" style="width: 500px; height: 50px;"></textarea>');
 	var dump = $('<button id="dump_button" type="button">Dump!</button>');
 	dump.click(dumpSystem);
 	sys.append(dump);
