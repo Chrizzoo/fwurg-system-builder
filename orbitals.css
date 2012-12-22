@@ -248,3 +248,8 @@
 	background: url(images/cloudsflip.png), -moz-linear-gradient(top, firebrick, gold, orange, darkred, gold, orange ) !important;
 }
 
+.double_moon:after {
+	content: "2x";
+    font-size: 200%;
+}
+

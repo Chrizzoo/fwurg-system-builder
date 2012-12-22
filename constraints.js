@@ -185,6 +185,19 @@ var climateCountConstraint = function(orbital) {
 	else return [];	
 }
 
+var doubleMoonConstraint = function(orbital) {
+	var aboutObjects =[];
+	
+	var small_moon = orbital.hasFeature("rules:small_moon");
+	var double_moon = orbital.hasFeature("rules:double_moon");
+	
+	aboutObjects.push(orbital);
+	if (double_moon && ! small_moon) {
+		return [violation(aboutObjects, 'The double moon special may only be applied on a small moon.')];
+	}
+	else return [];	
+}
+
 
 // create the Checker instance that contains the lists with checks
 fwurg.system.checker = new fwurg.system.constraints.Checker();
@@ -201,7 +214,7 @@ checker.addCheck('orbital', atmosphereGoldilockConstraint);
 checker.addCheck('orbital', naturalLifeConstraint);
 checker.addCheck('orbital', climateAtmosphereGoldilockConstraint);
 checker.addCheck('orbital', climateCountConstraint);
-
+checker.addCheck('orbital', doubleMoonConstraint);
 
 /* 
 === Done ===
