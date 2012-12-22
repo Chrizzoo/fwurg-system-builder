@@ -126,6 +126,11 @@
 	.data('_cost', defaultCost)
 	.data('_benefit', defaultBenefit);
 	
+	var underworld = new F("rules:underworld", ["special_option", "orbital"])
+	.data('benefit', {'zones' : 3})
+	.data('_cost', defaultCost)
+	.data('_benefit', defaultBenefit);
+	
 	// automatically create the rest of the features with wiki data.
 	
 	/**

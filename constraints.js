@@ -157,8 +157,14 @@ var climateAtmosphereGoldilockConstraint = function(orbital) {
 	var atmos = orbital.containsFeaturesByClass("atmosphere"); 
 	var orbit = orbital.orbit();
 	var goldi = orbit.hasFeature("rules:goldilocks_orbit");
+
 	aboutObjects.push(orbital);
-	if (climates.length > 0 && (!atmos || ! goldi)) {
+
+	var underworld = orbital.hasFeature("rules:underworld");
+	var solidified_core = orbital.hasFeature("rules:solidified_core");
+	var underworld_exception  = climates.length == 1 && solidified_core && underworld;
+	
+	if (climates.length > 0 && (!atmos || ! goldi) && ! underworld_exception) {
 		return [violation(aboutObjects, 'Climates are only allowed on a orbital in goldilocks that has an atmosphere.')];
 	}
 	else return [];	
@@ -167,8 +173,13 @@ var climateAtmosphereGoldilockConstraint = function(orbital) {
 var climateCountConstraint = function(orbital) {
 	var aboutObjects = [];
 	var climates = orbital.featuresByClass("climate");
+	
+	var underworld = orbital.hasFeature("rules:underworld");
+	var solidified_core = orbital.hasFeature("rules:solidified_core");
+	var underworld_exception = climates.length == 4 && solidified_core && underworld;
+	
 	aboutObjects.push(orbital);
-	if (climates.length > 3) {
+	if (climates.length > 3 && ! underworld_exception) {
 		return [violation(aboutObjects, 'An orbital can have maximally 3 climates.')];
 	}
 	else return [];	

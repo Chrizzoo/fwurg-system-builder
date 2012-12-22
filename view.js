@@ -283,6 +283,9 @@ var handleSpecialFeatureAddition = function (o, f) {
 			o.addFeature("rules:extra_hot_orbit");
 		}
 	}
+	else if(f =="rules:underworld" && (! o.hasFeature("rules:underworld"))) {
+		o.addFeature("rules:solidified_core");
+	}
 }
 
 /**
@@ -305,6 +308,9 @@ var handleSpecialFeatureDeletion = function (o, f) {
 			o.removeFeature("rules:goldilocks_orbit");
 			o.addFeature("rules:cold_orbit");
 		}
+	}
+	else if(f =="rules:underworld" && (o.hasFeature("rules:underworld"))) {
+		o.removeFeature("rules:solidified_core");
 	}
 }
 
