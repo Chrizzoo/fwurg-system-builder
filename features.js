@@ -30,6 +30,9 @@
     var cold_orbit = new F("rules:cold_orbit", ["orbit_type"]);
     var star_orbit = new F("rules:star_orbit", ["orbit_type"]);
     var no_orbit = new F("rules:no_orbit", ["orbit_type"]);
+
+	// for active sun on hot orbit.
+    var extra_hot_orbit = new F("rules:extra_hot_orbit", ["orbit_type"]);
 	
 	// -- Gas Giants 
 
@@ -113,7 +116,7 @@
 
 	// -- Specials
 	
-	var captured_moon = new F("rules:captured_moon", ["special_option", "orbit"])
+	var captured_moon = new F("rules:captured_moon", ["special_option", "orbital"])
 	.data('benefit', {'rock mass' : 2, 'lunar orbits': 2})
 	.data('_cost', defaultCost)
 	.data('_benefit', defaultBenefit);

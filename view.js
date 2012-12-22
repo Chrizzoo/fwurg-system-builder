@@ -277,6 +277,9 @@ var handleSpecialFeatureAddition = function (o, f) {
 			o.removeFeature("rules:goldilocks_orbit");
 			o.addFeature("rules:hot_orbit");
 		}
+		else if (o.hasFeature("rules:hot_orbit")) {
+			o.addFeature("rules:extra_hot_orbit");
+		}
 	}
 }
 
@@ -289,7 +292,10 @@ var handleSpecialFeatureAddition = function (o, f) {
 var handleSpecialFeatureDeletion = function (o, f) {
 	if (f == "rules:active_sun" && (o.hasFeature("rules:active_sun"))) {
 		//downgrade the orbit.
-		if (o.hasFeature("rules:hot_orbit")) {
+		if (o.hasFeature("rules:extra_hot_orbit")) {
+			o.removeFeature("rules:extra_hot_orbit");
+		}
+		else if (o.hasFeature("rules:hot_orbit")) {
 			o.removeFeature("rules:hot_orbit");
 			o.addFeature("rules:goldilocks_orbit");
 		}
