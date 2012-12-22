@@ -39,8 +39,8 @@ fwurg.system.view.drawSystem = function() {
 	}
 	
 	/* visual hax for large planet */
-	$('div.orbit:has(div.large_planet)').addClass('large_planet_orbit');
-	$('div.orbit:has(div.large_planet)').next().addClass('empty_orbit');
+	$('div.orbit:has(div.large_planet):not(.heavy_gravity_world)').addClass('large_planet_orbit');
+	$('div.orbit:has(div.large_planet):not(.heavy_gravity_world)').next().addClass('empty_orbit');
 }
 
 
@@ -220,11 +220,13 @@ var addOptions= function(classes, clickFunction) {
 var showFeaturesSelected = function() {
 	// get the object.
 	var object = $('#selected_object').data('object');
-	
+
 	// display the header title with the object name.
 	var displayName = "";
-	if (typeof object.name != 'undefined') {
-		displayName = object.name();
+	if (typeof object != 'undefined') {
+		if (typeof object.name != 'undefined') {
+			displayName = object.name();
+		}
 	}
 	else {
 		if (typeof $('.selected').attr('id') != 'undefined') {
@@ -232,7 +234,7 @@ var showFeaturesSelected = function() {
 		}
 	}
 	var selected_object = $('#selected_object').empty().append("<h2>Selected Object: "+displayName+"</h2>");
-	
+
 	if (typeof object != 'undefined') {
 		var features = object.features();
 		for (x in features) {
