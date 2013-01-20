@@ -37,7 +37,6 @@ var largePlanetConstraint = function(system) {
 		var orbit = orbits[x];
 		var orbitType = orbit.featuresByClass("orbit_type")[0];
 		var orbitals =  orbit.orbitals();
-		var heavy_gravity_world = orbit.hasFeature("rules:heavy_gravity_world");
 		
 		// perform check that states that the orbit after the large planet orbit must be empty. 
 		if (currentLargePlanet != null && x == currentOrbit +1 && orbitals.length > 0) {
@@ -66,7 +65,7 @@ var largePlanetConstraint = function(system) {
 		for (var y in orbitals) {
 			var orbital = orbitals[y];
 			// Found a new large planet and it does not have the heavy gravity world special.
-			if (orbital.hasFeature("rules:large_planet") && ! heavy_gravity_world) {
+			if (orbital.hasFeature("rules:large_planet") && ! orbital.hasFeature("rules:heavy_gravity_world")) {
 				currentLargePlanet = orbital;
 				currentOrbit = parseInt(x);
 				currentOrbitType = orbitType; 

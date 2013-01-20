@@ -39,8 +39,8 @@ fwurg.system.view.drawSystem = function() {
 	}
 	
 	/* visual hax for large planet */
-	$('div.orbit:has(div.large_planet):not(.heavy_gravity_world)').addClass('large_planet_orbit');
-	$('div.orbit:has(div.large_planet):not(.heavy_gravity_world)').next().addClass('empty_orbit');
+	$('div.orbit:has(div.large_planet)').not('div.orbit:has(div.large_planet.heavy_gravity_world)').addClass('large_planet_orbit');
+	$('div.orbit:has(div.large_planet)').not('div.orbit:has(div.large_planet.heavy_gravity_world)').next().addClass('empty_orbit');
 }
 
 
